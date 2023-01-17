@@ -1,10 +1,8 @@
 import datetime
-import json
 import os
 from functools import wraps
 
 from dotenv import load_dotenv
-from pymysql import err
 from sqlalchemy.exc import PendingRollbackError
 
 from src.application.Utils.responses import Response
@@ -89,7 +87,6 @@ def login():
         return Response.error_response(400, "Bad request", "Mot de passe incorrect"), 400
 
 
-@staticmethod
 def token_required(f):
     @wraps(f)
     def decorated(*args, **kwargs):
@@ -108,7 +105,24 @@ def token_required(f):
             current_utilisateur = Utilisateur.query.filter_by(id=data['utilisateur_id']).first()
         except Exception as e:
             print(e)
-            return Response.error_response(401, "Unauthorized", "Token invalid!")
+            return Response.error_response(401, "Unauthorized", "Token invalid!"), 401
         return f(current_user, current_utilisateur, *args, **kwargs)
 
     return decorated
+
+
+@auth.route('/update', methods=['PUT'])
+@token_required
+def change_password(current_user, current_utilisateur):
+    data = request.get_json()
+    user = User.query.filter_by(email=data['email']).first()
+    if not user:
+        return Response.error_response(400, "Bad request", "Email non valide"), 400
+    else:
+        user.password = bcrypt.generate_password_hash(data['password']).decode('utf-8')
+        utilisateur = Utilisateur.query.filter_by(user_id=user.id).first()
+        db.session.commit()
+        return Response.success_response(200, "OK", "Mot de passe mis à jour avec succès", utilisateur.format()), 200
+
+
+# TODO DISABLE ACCOUNT

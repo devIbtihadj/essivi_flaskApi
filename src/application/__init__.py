@@ -1,12 +1,14 @@
 import os
 
 from src.application.authentification import auth_bp
+from src.application.essivi import *
+
 from .extensions import db, migrate
 from src.application.essivi.models import *
 from flask_login import LoginManager
 from flask_bcrypt import Bcrypt
 
-from flask import Flask
+from flask import Flask, Blueprint
 
 login_manager = LoginManager()
 login_manager.session_protection = 'strong'
