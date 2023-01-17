@@ -4,7 +4,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 DEBUG = True
-SECRET_KEY = '@2019!secret?environment56'
+SECRET_KEY = '@2023!secret?iai_project'
 SQLALCHEMY_DATABASE_URI = ("mysql+pymysql://" + os.getenv('DB_USER') + ":"
                            + os.getenv('DB_PASSWORD') + "@"
                            + os.getenv('DB_HOST')

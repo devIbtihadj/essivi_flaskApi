@@ -1,3 +1,5 @@
+import json
+
 from flask import jsonify
 
 
@@ -5,12 +7,12 @@ class Response():
     @staticmethod
     def success_response(http_code, http_message, message, data):
         response = {
-            'code': http_code,
+            'httpCode': http_code,
             'httpMessage': http_message,
             'message': message,
             'data': data
         }
-        return jsonify(response)
+        return json.dumps(response)
 
     @staticmethod
     def error_response(http_code, http_message, message):
@@ -19,4 +21,4 @@ class Response():
             'httpMessage': http_message,
             'message': message
         }
-        return jsonify(response)
+        return json.dumps(response)

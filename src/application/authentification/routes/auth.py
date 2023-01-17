@@ -1,34 +1,114 @@
+import datetime
+import json
+import os
+from functools import wraps
+
+from dotenv import load_dotenv
+from pymysql import err
+from sqlalchemy.exc import PendingRollbackError
+
 from src.application.Utils.responses import Response
 from src.application.authentification import auth_bp as auth
-from flask import request, abort, make_response
+from flask import request, abort, make_response, jsonify
 from src.application.authentification.models.user import User
+from src.application.essivi.models.admin import Admin
 from src.application.essivi.models.commercial import Commercial
+from src.application import db, bcrypt
+import jwt
 
+from src.application.essivi.models.utilisateur import Utilisateur
 
-@auth.route('/test', methods=['GET'])
-def test():
-    print("ok........")
+load_dotenv()
 
 
 @auth.route('/register', methods=['POST'])
 def user_register():
     try:
         data = request.get_json()
-        print(data)
         user = User(email=data['email'], password=data['password'])
-        user_saved = user.insert()
-        commercial = Commercial(nom=data['nom'], prenom=data['prenom'], numTel=data['numTel'],
-                                numIdentification=data['numIdentification'], quartier=data['quartier'],
-                                nomPersonnePrevenir=data['nomPersonnePrevenir'],
-                                prenomPersonnePrevenir=data['prenomPersonnePrevenir'],
-                                contactPersonnePrevenir=data['contactPersonnePrevenir'],
-                                user_id=user_saved.id
-                                )
-        commercial.insert()
-        return Response.success_response(http_code=201, http_message="Created",
-                                         message="Utilisateur enregistré avec succès", data=commercial)
+        inserted_id = user.insert()
+        if data['typeUser'] == 'Commercial':
+            commercial = Commercial(nom=data['nom'], prenom=data['prenom'], numTel=data['numTel'],
+                                    numIdentification=data['numIdentification'], quartier=data['quartier'],
+                                    nomPersonnePrevenir=data['nomPersonnePrevenir'],
+                                    prenomPersonnePrevenir=data['prenomPersonnePrevenir'],
+                                    contactPersonnePrevenir=data['contactPersonnePrevenir'],
+                                    user_id=inserted_id
+                                    )
+            commercial.insert()
+            db.session.commit()
+            return Response.success_response(http_code=201, http_message="Created",
+                                             message="Commercial enregistré avec succès",
+                                             data=commercial.format()), 201
+        else:
+            if data['typeUser'] == 'Admin':
+                admin = Admin(nom=data['nom'], prenom=data['prenom'], numTel=data['numTel'], user_id=inserted_id)
+                admin.insert()
+                db.session.commit()
+                return Response.success_response(http_code=201, http_message="Created",
+                                                 message="Admin enregistré avec succès",
+                                                 data=admin.format()), 201
     # TODO SEND THE token
-    except Exception as e:
-        print(e)
+    except PendingRollbackError:
         return Response.error_response(http_code=400, http_message="Bad request",
-                                       message="Veuillez préciser tous les champs")
+                                       message="Cette adresse email a déjà été utilisée"), 400
+
+    except Exception as e:
+        print(type(e))
+        db.session.rollback()
+        return Response.error_response(http_code=400, http_message="Bad request",
+                                       message="Veuillez préciser tous les champs"), 400
+
+
+@auth.route('/login', methods=['POST'])
+def login():
+    data = request.get_json()
+    if not data['email'] or not data['password']:
+        return Response.error_response(400, "Bad request", "Veuillez renseigner tous les champs"), 400
+    user = User.query.filter_by(email=data['email']).first()
+    print(user)
+    if not user:
+        return Response.error_response(401, "Bad request", "Aucun utilisateur n'existe avec cette adresse email"), 401
+    if bcrypt.check_password_hash(user.password, data['password']):
+        utilisateur = Utilisateur.query.filter_by(user_id=user.id).first()
+        print(utilisateur)
+        token = jwt.encode(
+            {
+                'user_id': user.id,
+                'utilisateur_id': utilisateur.id,
+                'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=30)
+            },
+            os.getenv('MY_APP_SECRET_KEY')
+        )
+        data = {
+            'token': token,
+            'utilisateur': utilisateur.format()
+        }
+        return Response.success_response(200, "OK", "Connexion effectuée avec succès", data), 200
+    else:
+        return Response.error_response(400, "Bad request", "Mot de passe incorrect"), 400
+
+
+@staticmethod
+def token_required(f):
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        token = None
+
+        if 'x-access-token' in request.headers:
+            token = request.headers['x-access-token']
+        if not token:
+            return Response.error_response(401, "Unauthorized", "Veuillez d'abord vous connecter"), 401
+        try:
+            # PAR DEFAULT ICI, C'est l'algo HS256 qui est utilisé... La vérification a été faite en lisant la
+            # fonction encode.
+            data = jwt.decode(token, os.getenv('MY_APP_SECRET_KEY'), algorithms="HS256")
+
+            current_user = User.query.filter_by(id=data['user_id']).first()
+            current_utilisateur = Utilisateur.query.filter_by(id=data['utilisateur_id']).first()
+        except Exception as e:
+            print(e)
+            return Response.error_response(401, "Unauthorized", "Token invalid!")
+        return f(current_user, current_utilisateur, *args, **kwargs)
+
+    return decorated

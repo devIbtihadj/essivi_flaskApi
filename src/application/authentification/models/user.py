@@ -1,7 +1,6 @@
 from datetime import datetime
 
 from flask_login import UserMixin
-from dataclasses import dataclass
 
 
 from src.application import db, bcrypt, login_manager
@@ -34,7 +33,9 @@ class User(UserMixin, db.Model):
     def insert(self):
         try:
             db.session.add(self)
-            db.session.commit()
+            # db.session.commit()
+            db.session.flush()
+            return self.id
         except Exception as e:
             print(e)
             print("err user insert")

@@ -17,7 +17,6 @@ def create_app(config_type):
     app = Flask(__name__)
     config_file = os.path.join(os.getcwd() + '\\src\\config', config_type + '.py')
     app.config.from_pyfile(config_file)
-
     app.register_blueprint(auth_bp)
 
     db.init_app(app)
