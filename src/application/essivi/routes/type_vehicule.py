@@ -28,20 +28,20 @@ def update(current_user, current_utilisateur, id):
         type.libelle_type = data['libelle_type']
         type.image = data['image']
         type.update()
-        Response.success_response(200, "OK", "Type de vehicule enregistré avec succès", type.format())
+        return Response.success_response(200, "OK", "Type de vehicule enregistré avec succès", type.format())
     except:
-        Response.error_response(400, "Bad request", "Veuillez remplir les champ requis"), 400
+        return Response.error_response(400, "Bad request", "Veuillez remplir les champ requis"), 400
 
 
 @type_v.route('/get/all', methods=['GET'])
 @token_required
-def create(current_user, current_utilisateur):
+def get_all(current_user, current_utilisateur):
     try:
         types = Type_Vehicule.query.order_by(Type_Vehicule.id).all()
         types_formatted = [type.format() for type in types]
-        Response.success_response(200, "OK", "Liste des types de vehicules récupérée avec succès", types_formatted)
+        return Response.success_response(200, "OK", "Liste des types de vehicules récupérée avec succès", types_formatted)
     except:
-        Response.error_response(500, "Internal server error", "Problème du serveur"), 500
+        return Response.error_response(500, "Internal server error", "Problème du serveur"), 500
 
 
 @type_v.route('/delete/<int:id>', methods=['DELETE'])
@@ -52,6 +52,6 @@ def delete(current_user, current_utilisateur, id):
         try:
             type.delete()
         except:
-            Response.error_response(500, "Internal server error", "Problème du serveur"), 500
+            return Response.error_response(500, "Internal server error", "Problème du serveur"), 500
     else:
-        Response.error_response(400, "Bad request", "Type non existant"), 400
+        return Response.error_response(400, "Bad request", "Type non existant"), 400

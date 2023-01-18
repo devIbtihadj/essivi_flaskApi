@@ -1,6 +1,9 @@
 from datetime import datetime
 
 from typing import TYPE_CHECKING
+
+from src.application.essivi.models.commande import Commande
+
 if TYPE_CHECKING:
     from src.application.essivi.models.commercial import Commercial
     from src.application.essivi.models.payement import Payement
@@ -15,14 +18,16 @@ class Livraison(db.Model):
 
     payements = db.relationship('Payement', backref='livraisons', lazy=True)
     commercial_deliver_id = db.Column(db.Integer, db.ForeignKey('commercials.id'), nullable=False)
+    commande_id = db.Column(db.Integer, db.ForeignKey('commandes.id'), nullable=False)
 
-    def __int__(self, payement_id, commercial_id):
-        self.payement_id = payement_id
-        self.commercial_id = commercial_id
+    def __int__(self, commande_id, commercial_deliver_id):
+        self.commande_id = commande_id
+        self.commercial_deliver_id = commercial_deliver_id
 
     def format(self):
         return {
             'id': self.id,
+            'commande' : Commande.formatOfId(self.commercial_id),
             'commercial': Commercial.formatOfId(self.commercial_id),
             'payement': Payement.formatOfId(self.payement_id)
         }
@@ -34,7 +39,9 @@ class Livraison(db.Model):
 
     def insert(self):
         db.session.add(self)
-        db.session.commit()
+        # db.session.commit()
+        db.session.flush()
+        return self.id
 
     def update(self):
         db.session.commit()

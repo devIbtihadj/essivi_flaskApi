@@ -1,6 +1,7 @@
 from datetime import datetime
 
 from src.application.essivi.models.client import Client
+from src.application.essivi.models.livraison import Livraison
 from src.application.extensions import db
 
 
@@ -11,17 +12,21 @@ class Commande(db.Model):
     date_voulu_reception = db.Column(db.DateTime(), nullable=False)
 
     client_id = db.Column(db.Integer, db.ForeignKey('clients.id'), nullable=False)
+    livraisons = db.relationship('Livraison', backref='commandes', lazy=True)
 
     def __int__(self, date_voulu_reception, client_id):
         self.date_voulu_reception = date_voulu_reception
         self.client_id = client_id
 
     def format(self):
+        livraisons = Livraison.query.filter_by(commande_id=self.id).order_by(Livraison.id).all()
+        livraisons_formatted = [livraison.format() for livraison in livraisons]
         return {
             'id': self.id,
             'date_cde': self.date_cde,
             'date_voulu_reception': self.date_voulu_reception,
-            'client': Client.getOfId(self.client_id)
+            'client': Client.formatOfId(self.client_id),
+            'livraisons' : livraisons_formatted
         }
 
     @staticmethod

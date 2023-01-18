@@ -29,9 +29,9 @@ def update(current_user, current_utilisateur, id):
         vehicule.immatriculation = data['immatriculation']
         vehicule.type_vehicule_id = data['type_vehicule_id']
         vehicule.update()
-        Response.success_response(200, "OK", "vehicule enregistré avec succès", vehicule.format())
+        return Response.success_response(200, "OK", "vehicule enregistré avec succès", vehicule.format())
     except:
-        Response.error_response(400, "Bad request", "Veuillez remplir les champ requis"), 400
+        return Response.error_response(400, "Bad request", "Veuillez remplir les champ requis"), 400
 
 
 @vehicule.route('/get/all', methods=['GET'])
@@ -40,9 +40,9 @@ def create(current_user, current_utilisateur):
     try:
         vehicules = Vehicule.query.order_by(Vehicule.id).all()
         vehicules_formatted = [vehicule.format() for vehicule in vehicules]
-        Response.success_response(200, "OK", "Liste des vehicules récupérée avec succès", vehicules_formatted)
+        return Response.success_response(200, "OK", "Liste des vehicules récupérée avec succès", vehicules_formatted)
     except:
-        Response.error_response(500, "Internal server error", "Problème du serveur"), 500
+        return Response.error_response(500, "Internal server error", "Problème du serveur"), 500
 
 
 @vehicule.route('/delete/<int:id>', methods=['DELETE'])
@@ -53,6 +53,6 @@ def delete(current_user, current_utilisateur, id):
         try:
             vehicule.delete()
         except:
-            Response.error_response(500, "Internal server error", "Problème du serveur"), 500
+            return Response.error_response(500, "Internal server error", "Problème du serveur"), 500
     else:
-        Response.error_response(400, "Bad request", "vehicule non existant"), 400
+        return Response.error_response(400, "Bad request", "vehicule non existant"), 400
