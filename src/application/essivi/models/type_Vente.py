@@ -10,17 +10,16 @@ class Type_vente(db.Model):
     qte_unit = db.Column(db.Integer, nullable=False)
     prix_unit = db.Column(db.Integer, nullable=False)
     image = db.Column(db.String(100), nullable=False)
-
+    qte_composition = db.Column(db.Integer, default=1)
     marque_id = db.Column(db.Integer, db.ForeignKey('marques.id'), nullable=False)
-    emballage_id = db.Column(db.Integer, db.ForeignKey('emballages.id'), nullable=False)
 
-    def __init__(self, libelle_type_vente, qte_unit, prix_unit, image, marque_id, emballage_id):
+    def __init__(self, libelle_type_vente, qte_unit, prix_unit, image, qte_composition, marque_id):
         self.libelle_type_vente = libelle_type_vente
         self.qte_unit = qte_unit
         self.prix_unit = prix_unit
         self.image = image
+        self.qte_composition = qte_composition
         self.marque_id = marque_id
-        self.emballage_id = emballage_id
 
     def format(self):
         return {
@@ -29,8 +28,8 @@ class Type_vente(db.Model):
             'qte_unit': self.qte_unit,
             'prix_unit': self.prix_unit,
             'image': self.image,
+            'qte_composition': self.qte_composition,
             'marque': Marque.query.get(self.marque_id),
-            'emballage': Emballage.query.get(self.emballage_id)
 
         }
 

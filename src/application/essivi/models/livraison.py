@@ -2,7 +2,7 @@ from datetime import datetime
 
 from typing import TYPE_CHECKING
 
-from src.application.essivi.models.commande import Commande
+#from src.application.essivi.models.commande import Commande
 
 if TYPE_CHECKING:
     from src.application.essivi.models.commercial import Commercial

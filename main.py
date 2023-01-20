@@ -13,7 +13,7 @@ from src.application.essivi.models.payement import Payement
 from src.application.essivi.models.vehicule import Vehicule
 from src.application.essivi.models.client import Client
 from src.application.essivi.models.ocuupation import Occupation
-from src.application.essivi.models.emballage import Emballage
+# from src.application.essivi.models.emballage import Emballage
 from src.application.essivi.models.detail_Cde import Detail_cde
 from src.application.essivi.models.commande import Commande
 from src.application.essivi.models.admin import Admin

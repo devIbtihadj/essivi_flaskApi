@@ -1,5 +1,5 @@
 from src.application.extensions import db
-from src.application.essivi.models.commande import Commande
+#from src.application.essivi.models.commande import Commande
 from src.application.essivi.models.type_Vente import Type_vente
 
 
