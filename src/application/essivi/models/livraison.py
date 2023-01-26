@@ -17,20 +17,26 @@ class Livraison(db.Model):
     date_heure = db.Column(db.DateTime(), default=datetime.utcnow)
 
     payements = db.relationship('Payement', backref='livraisons', lazy=True)
-    commercial_deliver_id = db.Column(db.Integer, db.ForeignKey('commercials.id'), nullable=False)
+    commercial_id = db.Column(db.Integer, db.ForeignKey('commercials.id'), nullable=False)
     commande_id = db.Column(db.Integer, db.ForeignKey('commandes.id'), nullable=False)
 
     def __int__(self, commande_id, commercial_deliver_id):
         self.commande_id = commande_id
-        self.commercial_deliver_id = commercial_deliver_id
+        self.commercial_id = commercial_deliver_id
 
     def format(self):
+        payements = Payement.query.filter_by(livraison_id=self.id).order_by(Payement.id.desc()).all()
+        payements_formatted = [payement.format() for payement in payements]
         return {
             'id': self.id,
-            'commande' : Commande.formatOfId(self.commercial_id),
+            'date_heure' : self.date_heure,
+            'commande' : Commande.formatOfId(self.commande_id),
             'commercial': Commercial.formatOfId(self.commercial_id),
-            'payement': Payement.formatOfId(self.payement_id)
+            'payements': payements_formatted
         }
+
+
+
 
     @staticmethod
     def formatOfId(id):

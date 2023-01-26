@@ -18,6 +18,9 @@ from src.application.essivi.models.utilisateur import Utilisateur
 
 load_dotenv()
 
+@auth.route('test', methods=['GET'])
+def test():
+    return 'OK'
 
 @auth.route('/register', methods=['POST'])
 def user_register():
@@ -33,6 +36,14 @@ def user_register():
                                     contactPersonnePrevenir=data['contactPersonnePrevenir'],
                                     user_id=inserted_id
                                     )
+            print(commercial.nom)
+            print(commercial.prenom)
+            print(commercial.numIdentification)
+            print(commercial.quartier)
+            print(commercial.nomPersonnePrevenir)
+            print(commercial.prenomPersonnePrevenir)
+            print(commercial.user_id)
+
             commercial.insert()
             db.session.commit()
             return Response.success_response(http_code=201, http_message="Created",

@@ -4,9 +4,6 @@ from src.application import db
 from src.application.Utils.responses import Response
 from src.application.authentification.routes.auth import token_required
 from src.application.essivi import payement_bp as payement
-from src.application.essivi.models.payement import Payement
-from src.application.essivi.models.commande import Commande
-from sqlalchemy import and_
 
 from src.application.essivi.models.payement import Payement
 

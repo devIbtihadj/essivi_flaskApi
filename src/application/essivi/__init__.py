@@ -19,3 +19,5 @@ payement_bp = Blueprint("payement_bp", __name__, url_prefix='/payement')
 type_vente_bp = Blueprint("type_vente_bp", __name__, url_prefix='/type_vente')
 
 commande_bp = Blueprint("commande_bp", __name__, url_prefix='/commande')
+
+commercial_bp : Blueprint("commercial_bp", __name__, url_prefix='/commercial')

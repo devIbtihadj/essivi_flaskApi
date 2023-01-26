@@ -1,4 +1,5 @@
 from src.application.authentification.models.user import User
+from src.application.essivi.models.client import Client
 from src.application.essivi.models.utilisateur import Utilisateur
 from src.application.extensions import db
 
@@ -41,6 +42,7 @@ class Commercial(Utilisateur):
             'contactPersonnePrevenir': self.contactPersonnePrevenir,
             'user' : User.formatOfId(self.user_id)
         }
+
 
     def formatOfId(id):
         commercial = Commercial.query.get(id)

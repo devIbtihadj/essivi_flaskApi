@@ -1,5 +1,5 @@
 import os
-
+from flask_cors import CORS
 from src.application.authentification import auth_bp
 from src.application.essivi import *
 
@@ -17,6 +17,7 @@ bcrypt = Bcrypt()
 
 def create_app(config_type):
     app = Flask(__name__)
+    CORS(app)
     config_file = os.path.join(os.getcwd() + '\\src\\config', config_type + '.py')
     app.config.from_pyfile(config_file)
     app.register_blueprint(auth_bp)

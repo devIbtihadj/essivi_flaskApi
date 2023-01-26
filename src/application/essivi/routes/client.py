@@ -65,6 +65,7 @@ def all_commandes_for_this_client(current_user, current_utilisateur, id):
         except:
             return Response.error_response(500, "Internal server error", "Problème du serveur"), 500
 
+# TODO REVOIR LE DOUBLON
 
 @client.route('/<int:id>/commandes/all', methods=['PUT'])
 @token_required
@@ -81,7 +82,7 @@ def all_commandes_for_this_client(current_user, current_utilisateur, id):
             return Response.error_response(500, "Internal server error", "Problème du serveur"), 500
 
 
-@client.route('/<int:id>/commandes/notdelivred', methods=['PUT'])
+@client.route('/ /commandes/notdelivred', methods=['PUT'])
 @token_required
 def all_commandes_for_this_client_but_not_delivred(current_user, current_utilisateur, id):
     if id is None:
@@ -94,3 +95,19 @@ def all_commandes_for_this_client_but_not_delivred(current_user, current_utilisa
                                              commandes_formatted), 200
         except:
             return Response.error_response(500, "Internal server error", "Problème du serveur"), 500
+
+
+@client.route('/commandes/notdelivred', methods=['PUT'])
+@token_required
+def all_commandes_not_delivred(current_user, current_utilisateur):
+    if id is None:
+        return Response.error_response(400, "Bad request", "Précisez l'id du client"), 400
+    else:
+        try:
+            commandes = Commande.query.filter(livraisons=None).order_by(Commande.id).all()
+            commandes_formatted = [cmd.format() for cmd in commandes]
+            return Response.success_response(200, "OK", "Liste des commandes non livrées du client récupérées avec succès",
+                                             commandes_formatted), 200
+        except:
+            return Response.error_response(500, "Internal server error", "Problème du serveur"), 500
+

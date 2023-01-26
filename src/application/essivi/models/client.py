@@ -1,5 +1,6 @@
 from datetime import datetime
 
+from src.application.essivi.models.commercial import Commercial
 from src.application.extensions import db
 
 
@@ -36,7 +37,7 @@ class Client(db.Model):
             'latitude': self.latitude,
             'quartier': self.quartier,
             'dateEnrollement': self.dateEnrollement,
-            'commercial_id' : self.commercial_id
+            'commercial': Commercial.formatOfId(self.commercial_id)
         }
 
     def insert(self):
