@@ -20,4 +20,6 @@ type_vente_bp = Blueprint("type_vente_bp", __name__, url_prefix='/type_vente')
 
 commande_bp = Blueprint("commande_bp", __name__, url_prefix='/commande')
 
-commercial_bp : Blueprint("commercial_bp", __name__, url_prefix='/commercial')
+commercial_bp = Blueprint("commercial_bp", __name__, url_prefix='/commercial')
+
+commercial_client_bp = Blueprint("commercial_client_bp", __name__, url_prefix='/commercial_client')

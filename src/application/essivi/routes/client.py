@@ -51,7 +51,7 @@ def update(current_user, current_utilisateur, id):
             return Response.error_response(500, "Internal server error", "Erreur de serveur"), 400
 
 
-@client.route('/<int:id>/commandes/all', methods=['PUT'])
+@client.route('/<int:id>/commandes/all', methods=['GET'])
 @token_required
 def all_commandes_for_this_client(current_user, current_utilisateur, id):
     if id is None:
@@ -67,7 +67,7 @@ def all_commandes_for_this_client(current_user, current_utilisateur, id):
 
 # TODO REVOIR LE DOUBLON
 
-@client.route('/<int:id>/commandes/all', methods=['PUT'])
+@client.route('/<int:id>/commandes/all', methods=['GET'])
 @token_required
 def all_commandes_for_this_client(current_user, current_utilisateur, id):
     if id is None:
@@ -82,7 +82,7 @@ def all_commandes_for_this_client(current_user, current_utilisateur, id):
             return Response.error_response(500, "Internal server error", "Problème du serveur"), 500
 
 
-@client.route('/ /commandes/notdelivred', methods=['PUT'])
+@client.route('/<int:id>/commandes/notdelivred', methods=['GET'])
 @token_required
 def all_commandes_for_this_client_but_not_delivred(current_user, current_utilisateur, id):
     if id is None:
@@ -97,7 +97,7 @@ def all_commandes_for_this_client_but_not_delivred(current_user, current_utilisa
             return Response.error_response(500, "Internal server error", "Problème du serveur"), 500
 
 
-@client.route('/commandes/notdelivred', methods=['PUT'])
+@client.route('/commandes/notdelivred', methods=['GET'])
 @token_required
 def all_commandes_not_delivred(current_user, current_utilisateur):
     if id is None:
@@ -111,3 +111,24 @@ def all_commandes_not_delivred(current_user, current_utilisateur):
         except:
             return Response.error_response(500, "Internal server error", "Problème du serveur"), 500
 
+
+@client.route('/get/all', methods=['GET'])
+@token_required
+def all_clients(current_user, current_utilisateur):
+    try:
+        clients = Client.query.all()
+        clients_formatted = [client.format() for client in clients]
+        return Response.success_response(200, "OK", "Liste récupérée avec succès", clients_formatted), 200
+    except:
+        return Response.error_response(500, "Internal server error", "Erreur de serveur"), 500
+
+
+@client.route('/get/<int:id>/', methods=['GET'])
+@token_required
+def getClient(current_user, current_utilisateur, id):
+    try:
+        clients = Client.query.get(id)
+        clients_formatted = [client.format() for client in clients]
+        return Response.success_response(200, "OK", "Liste récupérée avec succès", clients_formatted), 200
+    except:
+        return Response.error_response(500, "Internal server error", "Erreur de serveur"), 500

@@ -1,7 +1,7 @@
 from datetime import datetime
 
-from src.application.essivi.models.commercial import Commercial
-from src.application.essivi.models.commercial_client import Commercial_client
+#from src.application.essivi.models.commercial import Commercial
+#from src.application.essivi.models.commercial_client import Commercial_client
 from src.application.extensions import db
 from sqlalchemy import and_
 
@@ -43,11 +43,6 @@ class Client(db.Model):
             'dateEnrollement': self.dateEnrollement,
             'commercial_client': Commercial_client.formatOfId(commercial_client.id)
         }
-
-    @staticmethod
-    def formatOfId(id):
-        commercial = Commercial.query.get(id)
-        return commercial.format()
 
     def insert(self):
         db.session.add(self)

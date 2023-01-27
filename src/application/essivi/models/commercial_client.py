@@ -1,7 +1,7 @@
 from datetime import datetime
 
-from src.application.essivi.models.client import Client
-from src.application.essivi.models.commercial import Commercial
+#from src.application.essivi.models.client import Client
+#from src.application.essivi.models.commercial import Commercial
 from src.application.extensions import db
 
 

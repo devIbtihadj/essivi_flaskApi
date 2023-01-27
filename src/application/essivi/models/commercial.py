@@ -1,5 +1,8 @@
+from sqlalchemy import and_
+
 from src.application.authentification.models.user import User
-from src.application.essivi.models.client import Client
+#from src.application.essivi.models.commercial_client import Commercial_client
+#from src.application.essivi.models.client import Client
 from src.application.essivi.models.utilisateur import Utilisateur
 from src.application.extensions import db
 
@@ -30,6 +33,9 @@ class Commercial(Utilisateur):
         self.contactPersonnePrevenir = contactPersonnePrevenir
 
     def format(self):
+        commercials_clients = Commercial_client.query.filter \
+            (and_(Commercial_client.dateFin is None, Commercial.id == self.id)).all()
+        commercials_clients_formatted = [commercial_client.format() for commercial_client in commercials_clients]
         return {
             'id': self.id,
             'prenom': self.prenom,
@@ -40,7 +46,8 @@ class Commercial(Utilisateur):
             'nomPersonnePrevenir': self.nomPersonnePrevenir,
             'prenomPersonnePrevenir': self.prenomPersonnePrevenir,
             'contactPersonnePrevenir': self.contactPersonnePrevenir,
-            'user' : User.formatOfId(self.user_id)
+            'user' : User.formatOfId(self.user_id),
+            'commercial_client' : commercials_clients_formatted
         }
 
     @staticmethod

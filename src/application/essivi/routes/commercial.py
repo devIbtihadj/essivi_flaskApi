@@ -12,7 +12,7 @@ from src.application.essivi.models.livraison import Livraison
 from src.application.essivi.models.payement import Payement
 
 
-@commercial.route('/all', methods=['POST'])
+@commercial.route('/all', methods=['GET'])
 @token_required
 def allCommercials(current_user, current_utilisateur):
     try:
@@ -38,7 +38,7 @@ def allCientsForCommercial(current_user, current_utilisateur, idCom):
 
 @commercial.route('/<int:idCom>/payements/all', methods=['GET'])
 @token_required
-def allPayementsForCommercial(current_user, current_utilisateur, idCom):
+def allPayementsRecievedByCommercial(current_user, current_utilisateur, idCom):
     try:
         payements = Payement.query.filter_by(commercial_id=idCom).order_by(Client.id.desc()).all()
         payements_formatted = [payement.format() for payement in payements]
@@ -49,7 +49,7 @@ def allPayementsForCommercial(current_user, current_utilisateur, idCom):
 
 @commercial.route('/<int:idCom>/payements/all', methods=['GET'])
 @token_required
-def allLivraisonsForCommercial(current_user, current_utilisateur, idCom):
+def allLivraisonsDoneByCommercial(current_user, current_utilisateur, idCom):
     try:
         livraisons = Livraison.query.filter_by(commercial_id=idCom).order_by(Client.id.desc()).all()
         livraisons_formatted = [livraison.format() for livraison in livraisons]
