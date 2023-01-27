@@ -1,7 +1,9 @@
 from datetime import datetime
 
 from src.application.essivi.models.commercial import Commercial
+from src.application.essivi.models.commercial_client import Commercial_client
 from src.application.extensions import db
+from sqlalchemy import and_
 
 
 class Client(db.Model):
@@ -28,17 +30,24 @@ class Client(db.Model):
         self.commercial_id = commercial_id
 
     def format(self):
+        commercial_client = Commercial_client.query.filter \
+            (and_(Commercial_client.dateFin is None, Commercial_client.client_id == self.id)).first()
         return {
             'id': self.id,
             'nom': self.nom,
             'prenom': self.prenom,
-            'numTel' : self.numTel,
+            'numTel': self.numTel,
             'longitude': self.longitude,
             'latitude': self.latitude,
             'quartier': self.quartier,
             'dateEnrollement': self.dateEnrollement,
-            'commercial': Commercial.formatOfId(self.commercial_id)
+            'commercial_client': Commercial_client.formatOfId(commercial_client.id)
         }
+
+    @staticmethod
+    def formatOfId(id):
+        commercial = Commercial.query.get(id)
+        return commercial.format()
 
     def insert(self):
         db.session.add(self)

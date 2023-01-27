@@ -43,7 +43,7 @@ class Commercial(Utilisateur):
             'user' : User.formatOfId(self.user_id)
         }
 
-
+    @staticmethod
     def formatOfId(id):
         commercial = Commercial.query.get(id)
         return commercial.format()
