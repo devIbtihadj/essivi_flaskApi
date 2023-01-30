@@ -36,7 +36,7 @@ def update(current_user, current_utilisateur, id):
 
 @vehicule.route('/get/all', methods=['GET'])
 @token_required
-def create(current_user, current_utilisateur):
+def all(current_user, current_utilisateur):
     try:
         vehicules = Vehicule.query.order_by(Vehicule.id).all()
         vehicules_formatted = [vehicule.format() for vehicule in vehicules]
@@ -52,6 +52,7 @@ def delete(current_user, current_utilisateur, id):
     if vehicule is not None:
         try:
             vehicule.delete()
+            return Response.success_response(200, "OK", "Véhicule supprimé avec succès", None)
         except:
             return Response.error_response(500, "Internal server error", "Problème du serveur"), 500
     else:

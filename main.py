@@ -11,8 +11,8 @@ from src.application.essivi.models.type_Vehicule import Type_Vehicule
 from src.application.essivi.models.marque import Marque
 from src.application.essivi.models.payement import Payement
 from src.application.essivi.models.vehicule import Vehicule
-#from src.application.essivi.models.client import Client
-#from src.application.essivi.models.ocuupation import Occupation
+# from src.application.essivi.models.client import Client
+# from src.application.essivi.models.ocuupation import Occupation
 # from src.application.essivi.models.emballage import Emballage
 from src.application.essivi.models.detail_Cde import Detail_cde
 from src.application.essivi.models.commande import Commande
@@ -22,6 +22,10 @@ from src.application.essivi.models.client import Client
 from src.application.essivi.models.livraison import Livraison
 
 from src.application.authentification.routes import auth
+from src.application.essivi.routes import marque
+from src.application.essivi.routes import type_vehicule
+
+
 def print_hi(name):
     # Use a breakpoint in the code line below to debug your script.
     print(f'Hi, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
@@ -36,6 +40,5 @@ if __name__ == '__main__':
         db.create_all()
 
     flask_app.run()
-
 
     # See PyCharm help at https://www.jetbrains.com/help/pycharm/

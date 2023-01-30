@@ -1,3 +1,5 @@
+import os
+
 from flask import request
 
 from src.application.Utils.responses import Response
@@ -5,18 +7,43 @@ from src.application.essivi import type_vehicule_bp as type_v
 from src.application import db
 from src.application.authentification.routes.auth import token_required
 from src.application.essivi.models.type_Vehicule import Type_Vehicule
+from werkzeug.utils import secure_filename
+from dotenv import load_dotenv
+
+load_dotenv()
+
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
+
+
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 
 @type_v.route('/creer', methods=['POST'])
 @token_required
 def create(current_user, current_utilisateur):
+    print(request)
+    print(request.files['image'])
     data = request.get_json()
     try:
-        type = Type_Vehicule(libelle_type=data['libelle_type'], image=data['image'])
-        type.insert()
-        Response.success_response(200, "OK", "Type de vehicule enregistré avec succès", type.format())
+        print(request.args.get("libelle_type"))
+    except Exception as e:
+        print(e)
+    try:
+        file = request.files['image']
+        print(file)
+        print('------')
+        if file and allowed_file(file.filename):
+            filename = secure_filename(file.filename)
+            print('here')
+            file.save(os.path.join(os.getenv('UPLOAD_FOLDER'), filename))
+            type = Type_Vehicule(libelle_type=data['libelle_type'], image=(os.path.join(os.getenv('UPLOAD_FOLDER'), filename)))
+            type.insert()
+            return Response.success_response(200, "OK", "Type de vehicule enregistré avec succès", type.format())
+        else:
+            return Response.error_response(400, "Bad request", "EAssurez-vous du type de fichier"), 400
     except:
-        Response.error_response(400, "Bad request", "Veuillez remplir les champs requis"), 400
+        return Response.error_response(400, "Bad request", "Veuillez remplir les champs requis"), 400
 
 
 @type_v.route('/update/<int:id>', methods=['PUT'])
@@ -39,7 +66,8 @@ def get_all(current_user, current_utilisateur):
     try:
         types = Type_Vehicule.query.order_by(Type_Vehicule.id).all()
         types_formatted = [type.format() for type in types]
-        return Response.success_response(200, "OK", "Liste des types de vehicules récupérée avec succès", types_formatted)
+        return Response.success_response(200, "OK", "Liste des types de vehicules récupérée avec succès",
+                                         types_formatted)
     except:
         return Response.error_response(500, "Internal server error", "Problème du serveur"), 500
 
@@ -51,6 +79,7 @@ def delete(current_user, current_utilisateur, id):
     if type is not None:
         try:
             type.delete()
+            return Response.success_response(200, "OK", "Type de véhicule supprimé avec succès", None)
         except:
             return Response.error_response(500, "Internal server error", "Problème du serveur"), 500
     else:

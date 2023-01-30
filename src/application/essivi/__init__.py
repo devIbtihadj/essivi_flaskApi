@@ -8,9 +8,11 @@ occupation_bp = Blueprint("occupation_bp", __name__, url_prefix='/occupation')
 
 client_bp = Blueprint("client_bp", __name__, url_prefix='/client')
 
+marque_bp = Blueprint("marque_bp", __name__, url_prefix='/marque')
+
 # emballage_bp = Blueprint("emballage_bp", __name__, url_prefix='/emballage')
 
-marque_bp = Blueprint("marque_bp", __name__, url_prefix='/marque')
+
 
 livraison_bp = Blueprint("livraison_bp", __name__, url_prefix='/livraison')
 

@@ -11,12 +11,13 @@ from src.application.essivi.models.marque import Marque
 @token_required
 def create(current_user, current_utilisateur):
     data = request.get_json()
+    print(data)
     try:
         marque = Marque(libelle_marque=data['libelle_marque'])
         marque.insert()
-        Response.success_response(200, "OK", "Marque enregistrée avec succès", marque.format())
+        return Response.success_response(200, "OK", "Marque enregistrée avec succès", marque.format()), 200
     except:
-        Response.error_response(400, "Bad request", "Veuillez remplir les champs requis"), 400
+        return Response.error_response(400, "Bad request", "Veuillez remplir les champs requis"), 400
 
 
 @marque.route('/update/<int:id>', methods=['PUT'])
@@ -47,9 +48,10 @@ def get_all(current_user, current_utilisateur):
 @token_required
 def delete(current_user, current_utilisateur, id):
     marque = Marque.query.get(id)
-    if type is not None:
+    if id is not None:
         try:
             marque.delete()
+            return Response.success_response(200, "OK", "Marque supprimée avec succès", None)
         except:
             return Response.error_response(500, "Internal server error", "Problème du serveur"), 500
     else:
