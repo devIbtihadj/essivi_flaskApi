@@ -24,25 +24,23 @@ def allowed_file(filename):
 def create(current_user, current_utilisateur):
     print(request)
     print(request.files['image'])
-    data = request.get_json()
-    try:
-        print(request.args.get("libelle_type"))
-    except Exception as e:
-        print(e)
+    print(request.form['libelle_type'])
+
     try:
         file = request.files['image']
         print(file)
         print('------')
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
-            print('here')
+            print('filename '+filename)
             file.save(os.path.join(os.getenv('UPLOAD_FOLDER'), filename))
-            type = Type_Vehicule(libelle_type=data['libelle_type'], image=(os.path.join(os.getenv('UPLOAD_FOLDER'), filename)))
+            type = Type_Vehicule(libelle_type=request.form['libelle_type'], image=(os.path.join(os.getenv('UPLOAD_FOLDER'), filename)))
             type.insert()
             return Response.success_response(200, "OK", "Type de vehicule enregistré avec succès", type.format())
         else:
             return Response.error_response(400, "Bad request", "EAssurez-vous du type de fichier"), 400
-    except:
+    except Exception as e:
+        print(e)
         return Response.error_response(400, "Bad request", "Veuillez remplir les champs requis"), 400
 
 

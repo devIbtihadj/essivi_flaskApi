@@ -5,7 +5,7 @@ class Type_Vehicule(db.Model):
     __tablename__ = 'types_vehicules'
     id = db.Column(db.Integer, primary_key=True)
     libelle_type = db.Column(db.String(15), nullable=False, unique=True)
-    image = db.Column(db.String(100), nullable=False)
+    image = db.Column(db.String(200), nullable=False)
 
     def __int__(self, libelle_type, image):
         self.libelle_type = libelle_type

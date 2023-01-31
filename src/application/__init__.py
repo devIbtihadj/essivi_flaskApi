@@ -19,6 +19,7 @@ bcrypt = Bcrypt()
 
 def create_app(config_type):
     app = Flask(__name__)
+    print(os.path.dirname(app.instance_path))
     CORS(app)
     config_file = os.path.join(os.getcwd() + '\\src\\config', config_type + '.py')
     app.config.from_pyfile(config_file)
