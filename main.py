@@ -24,6 +24,17 @@ from src.application.essivi.models.livraison import Livraison
 from src.application.authentification.routes import auth
 from src.application.essivi.routes import marque
 from src.application.essivi.routes import type_vehicule
+from src.application.essivi.routes import vehicule
+from src.application.essivi.routes import commercial_client
+from src.application.essivi.routes import client
+from src.application.essivi.routes import payement
+from src.application.essivi.routes import utilisateurs
+from src.application.essivi.routes import occupation
+from src.application.essivi.routes import type_vente
+from src.application.essivi.routes import livraison
+from src.application.essivi.routes import commercial
+from src.application.essivi.routes import commande
+
 
 
 def print_hi(name):

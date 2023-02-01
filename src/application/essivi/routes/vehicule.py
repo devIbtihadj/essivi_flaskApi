@@ -13,7 +13,7 @@ from src.application.essivi.models.vehicule import Vehicule
 def create(current_user, current_utilisateur):
     data = request.get_json()
     try:
-        vehicule = Vehicule(immatriculation=data['immatriculation'], vehicule_vehicule_id=data['vehicule_vehicule_id'])
+        vehicule = Vehicule(immatriculation=data['immatriculation'], type_vehicule_id=data['type_vehicule_id'])
         vehicule.insert()
         Response.success_response(200, "OK", "vehicule enregistré avec succès", vehicule.format())
     except:

@@ -47,16 +47,27 @@ def create(current_user, current_utilisateur):
 @type_v.route('/update/<int:id>', methods=['PUT'])
 @token_required
 def update(current_user, current_utilisateur, id):
-    data = request.get_json()
+    print(request)
+    print(request.files['image'])
+    print(request.form['libelle_type'])
+    type = Type_Vehicule.query.filter_by(id=id).first()
     try:
-        type = Type_Vehicule.query.filter_by(id=id).first()
-        type.libelle_type = data['libelle_type']
-        type.image = data['image']
-        type.update()
-        return Response.success_response(200, "OK", "Type de vehicule enregistré avec succès", type.format())
-    except:
-        return Response.error_response(400, "Bad request", "Veuillez remplir les champ requis"), 400
-
+        file = request.files['image']
+        print(file)
+        print('------')
+        if file and allowed_file(file.filename):
+            filename = secure_filename(file.filename)
+            print('filename ' + filename)
+            type.libelle_type = request.form['libelle_type']
+            file.save(os.path.join(os.getenv('UPLOAD_FOLDER'), filename))
+            type.image = os.path.join(os.getenv('UPLOAD_FOLDER'), filename)
+            type.update()
+            return Response.success_response(200, "OK", "Type de vehicule mis à jour avec succès", type.format())
+        else:
+            return Response.error_response(400, "Bad request", "Assurez-vous du type de fichier"), 400
+    except Exception as e:
+        print(e)
+        return Response.error_response(400, "Bad request", "Veuillez remplir les champs requis"), 400
 
 @type_v.route('/get/all', methods=['GET'])
 @token_required
