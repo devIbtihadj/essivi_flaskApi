@@ -1,7 +1,8 @@
 from datetime import datetime
 
-#from src.application.essivi.models.commercial import Commercial
 #from src.application.essivi.models.commercial_client import Commercial_client
+# from src.application.essivi.models.commercial import Commercial
+# from src.application.essivi.models.commercial_client import Commercial_client
 from src.application.extensions import db
 from sqlalchemy import and_
 
@@ -30,23 +31,38 @@ class Client(db.Model):
         self.commercial_id = commercial_id
 
     def format(self):
-        commercial_client = Commercial_client.query.filter \
-            (and_(Commercial_client.dateFin is None, Commercial_client.client_id == self.id)).first()
-        return {
-            'id': self.id,
-            'nom': self.nom,
-            'prenom': self.prenom,
-            'numTel': self.numTel,
-            'longitude': self.longitude,
-            'latitude': self.latitude,
-            'quartier': self.quartier,
-            'dateEnrollement': self.dateEnrollement,
-            'commercial_client': Commercial_client.formatOfId(commercial_client.id)
-        }
+        try:
+            #commercial_client = Commercial_client.query.filter(and_(Commercial_client.dateFin is None, Commercial_client.client_id == self.id)).first()
+
+            # print(commercial_client)
+
+            return {
+                'id': self.id,
+                'nom': self.nom,
+                'prenom': self.prenom,
+                'numTel': self.numTel,
+                'longitude': self.longitude,
+                'latitude': self.latitude,
+                'quartier': self.quartier,
+                'dateEnrollement': self.dateEnrollement.strftime("%Y-%m-%d %H:%M:%S:%f")
+            }
+        # 'commercial_client': Commercial_client.formatOfId(commercial_client.id)
+
+        except Exception as e:
+            print(e)
+
+
+
 
     def insert(self):
-        db.session.add(self)
-        db.session.commit()
+        try:
+            db.session.add(self)
+            # db.session.commit()
+            db.session.flush()
+            return self.id
+        except Exception as e:
+            print(e)
+            print("err client insert")
 
     def update(self):
         db.session.commit()

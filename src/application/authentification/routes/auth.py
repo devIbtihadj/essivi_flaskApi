@@ -10,10 +10,11 @@ from src.application.authentification import auth_bp as auth
 from flask import request, abort, make_response, jsonify
 from src.application.authentification.models.user import User
 from src.application.essivi.models.admin import Admin
-from src.application.essivi.models.commercial import Commercial
+#from src.application.essivi.models.commercial import Commercial
 from src.application import db, bcrypt
 import jwt
 
+from src.application.essivi.models.commercial import Commercial
 from src.application.essivi.models.utilisateur import Utilisateur
 
 load_dotenv()
@@ -48,7 +49,7 @@ def user_register():
             db.session.commit()
             return Response.success_response(http_code=201, http_message="Created",
                                              message="Commercial enregistré avec succès",
-                                             data=commercial.format()), 201
+                                             data=commercial.formatSimple()), 201
         else:
             if data['typeUser'] == 'Admin':
                 admin = Admin(nom=data['nom'], prenom=data['prenom'], numTel=data['numTel'], user_id=inserted_id)
@@ -64,6 +65,7 @@ def user_register():
 
     except Exception as e:
         print(type(e))
+        print(e)
         db.session.rollback()
         return Response.error_response(http_code=400, http_message="Bad request",
                                        message="Veuillez préciser tous les champs"), 400

@@ -1,8 +1,11 @@
 from datetime import datetime
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
 
-from src.application.essivi.models.client import Client
-from src.application.essivi.models.livraison import Livraison
-#from src.application.essivi.models.livraison import Livraison
+
+    from src.application.essivi.models.client import Client
+    from src.application.essivi.models.livraison import Livraison
+    #from src.application.essivi.models.livraison import Livraison
 from src.application.extensions import db
 
 
@@ -27,13 +30,26 @@ class Commande(db.Model):
             'date_cde': self.date_cde,
             'date_voulu_reception': self.date_voulu_reception,
             'client': Client.formatOfId(self.client_id),
-            'livraisons' : livraisons_formatted
+            'livraisons' : livraisons_formatted if livraisons_formatted else None
+        }
+
+    def formatOfIdSimpleRetrn(self):
+        return {
+            'id': self.id,
+            'date_cde': self.date_cde,
+            'date_voulu_reception': self.date_voulu_reception,
+            'client': Client.formatOfId(self.client_id)
         }
 
     @staticmethod
     def formatOfId(id):
         commande = Commande.query.get(id)
         return commande.format()
+
+    @staticmethod
+    def formatOfIdSimple(id):
+        commande = Commande.query.get(id)
+        return commande.formatOfIdSimpleRetrn()
 
     def insert(self):
         db.session.add(self)

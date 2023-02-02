@@ -1,12 +1,17 @@
 from flask import request
 
+from src.application import db
 from src.application.Utils.responses import Response
 from src.application.authentification.routes.auth import token_required
-from src.application.essivi import client_bp as client
+from typing import TYPE_CHECKING
 from src.application.essivi.models.client import Client
-from src.application.essivi.models.commande import Commande
+from src.application.essivi.models.commercial_client import Commercial_client
+if TYPE_CHECKING:
+    from src.application.essivi.models.client import Client
+    from src.application.essivi.models.commercial_client import Commercial_client
+    from src.application.essivi.models.commande import Commande
 from sqlalchemy import and_
-
+from src.application.essivi import client_bp as client
 
 @client.route('/creer/comm/<int:id>', methods=['POST'])
 @token_required
@@ -21,9 +26,15 @@ def creer(current_user, current_utilisateur, id):
         client = Client(nom=data['nom'], prenom=data['prenom'], numTel=data['numTel'], longitude=data['longitude'],
                         latitude=data['latitude'],
                         quartier=data['quartier'], commercial_id=id)
-        client.insert()
+        client_id_inserted = client.insert()
+        print(client_id_inserted)
+        client.id = client_id_inserted
+        comm_client = Commercial_client(commercial_id=id, client_id=client_id_inserted)
+        comm_client.insert()
+        db.session.commit()
         return Response.success_response(200, "OK", "Affectation effectuée avec succès", client.format()), 200
-    except:
+    except Exception as e:
+        print(e)
         return Response.error_response(500, "Internal server error", "Erreur de serveur"), 400
 
 
@@ -59,28 +70,30 @@ def all_commandes_for_this_client(current_user, current_utilisateur, id):
     else:
         try:
             commandes = Commande.query.filter_by(client_id=id).order_by(Commande.id).all()
+            print(commandes)
             commandes_formatted = [cmd.format() for cmd in commandes]
             return Response.success_response(200, "OK", "Liste des commandes du client récupérées avec succès",
                                              commandes_formatted), 200
         except:
             return Response.error_response(500, "Internal server error", "Problème du serveur"), 500
+
 
 # TODO REVOIR LE DOUBLON
 
-@client.route('/<int:id>/commandes/all', methods=['GET'])
-@token_required
-def all_commandes_for_this_client(current_user, current_utilisateur, id):
-    if id is None:
-        return Response.error_response(400, "Bad request", "Précisez l'id du client"), 400
-    else:
-        try:
-            commandes = Commande.query.filter_by(client_id=id).order_by(Commande.id).all()
-            commandes_formatted = [cmd.format() for cmd in commandes]
-            return Response.success_response(200, "OK", "Liste des commandes du client récupérées avec succès",
-                                             commandes_formatted), 200
-        except:
-            return Response.error_response(500, "Internal server error", "Problème du serveur"), 500
-
+# @client.route('/<int:id>/commandes/all', methods=['GET'])
+# @token_required
+# def all_commandes_for_this_client(current_user, current_utilisateur, id):
+#     if id is None:
+#         return Response.error_response(400, "Bad request", "Précisez l'id du client"), 400
+#     else:
+#         try:
+#             commandes = Commande.query.filter_by(client_id=id).order_by(Commande.id).all()
+#             commandes_formatted = [cmd.format() for cmd in commandes]
+#             return Response.success_response(200, "OK", "Liste des commandes du client récupérées avec succès",
+#                                              commandes_formatted), 200
+#         except:
+#             return Response.error_response(500, "Internal server error", "Problème du serveur"), 500
+#
 
 @client.route('/<int:id>/commandes/notdelivred', methods=['GET'])
 @token_required
@@ -91,7 +104,8 @@ def all_commandes_for_this_client_but_not_delivred(current_user, current_utilisa
         try:
             commandes = Commande.query.filter(and_(client_id=id, livraisons=None)).order_by(Commande.id).all()
             commandes_formatted = [cmd.format() for cmd in commandes]
-            return Response.success_response(200, "OK", "Liste des commandes non livrées du client récupérées avec succès",
+            return Response.success_response(200, "OK",
+                                             "Liste des commandes non livrées du client récupérées avec succès",
                                              commandes_formatted), 200
         except:
             return Response.error_response(500, "Internal server error", "Problème du serveur"), 500
@@ -106,7 +120,8 @@ def all_commandes_not_delivred(current_user, current_utilisateur):
         try:
             commandes = Commande.query.filter(livraisons=None).order_by(Commande.id).all()
             commandes_formatted = [cmd.format() for cmd in commandes]
-            return Response.success_response(200, "OK", "Liste des commandes non livrées du client récupérées avec succès",
+            return Response.success_response(200, "OK",
+                                             "Liste des commandes non livrées du client récupérées avec succès",
                                              commandes_formatted), 200
         except:
             return Response.error_response(500, "Internal server error", "Problème du serveur"), 500

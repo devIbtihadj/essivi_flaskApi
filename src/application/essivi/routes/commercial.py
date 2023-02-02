@@ -8,6 +8,7 @@ from src.application.essivi.models.commercial import Commercial
 from src.application.essivi.models.commande import Commande
 from sqlalchemy import and_
 
+from src.application.essivi.models.commercial_client import Commercial_client
 from src.application.essivi.models.livraison import Livraison
 from src.application.essivi.models.payement import Payement
 
@@ -20,6 +21,20 @@ def allCommercials(current_user, current_utilisateur):
         commercials_formatted = [commercial.format() for commercial in commercials]
         return Response.success_response(http_code=200, http_message="OK", message="Liste récupérée avec succès",
                                          data=commercials_formatted), 200
+    except:
+        return Response.error_response(500, "Internal server error", "Erreur de serveur"), 500
+
+
+
+@commercial.route('/client/all/<int:idCom>', methods=['GET'])
+@token_required
+def allClientsForCommercial(current_user, current_utilisateur, id):
+    try:
+        commercials_clients = Commercial_client.query.filter_by(commercial_id=id).order_by(Commercial_client.id).all()
+        print(commercials_clients)
+        commercial_client_formatted = [cc.format() for cc in commercials_clients]
+        return Response.success_response(http_code=200, http_message="OK", message="Liste récupérée avec succès",
+                                         data=commercial_client_formatted), 200
     except:
         return Response.error_response(500, "Internal server error", "Erreur de serveur"), 500
 

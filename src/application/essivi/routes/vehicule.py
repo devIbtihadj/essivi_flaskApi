@@ -12,12 +12,14 @@ from src.application.essivi.models.vehicule import Vehicule
 @token_required
 def create(current_user, current_utilisateur):
     data = request.get_json()
+    print(data)
     try:
         vehicule = Vehicule(immatriculation=data['immatriculation'], type_vehicule_id=data['type_vehicule_id'])
         vehicule.insert()
-        Response.success_response(200, "OK", "vehicule enregistré avec succès", vehicule.format())
-    except:
-        Response.error_response(400, "Bad request", "Veuillez remplir les champs requis"), 400
+        return Response.success_response(200, "OK", "vehicule enregistré avec succès", vehicule.format())
+    except Exception as e:
+        print(e)
+        return Response.error_response(400, "Bad request", "Veuillez remplir les champs requis"), 400
 
 
 @vehicule.route('/update/<int:id>', methods=['PUT'])

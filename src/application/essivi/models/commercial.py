@@ -1,7 +1,6 @@
 from sqlalchemy import and_
 
 from src.application.authentification.models.user import User
-#from src.application.essivi.models.commercial_client import Commercial_client
 #from src.application.essivi.models.client import Client
 from src.application.essivi.models.utilisateur import Utilisateur
 from src.application.extensions import db
@@ -47,13 +46,33 @@ class Commercial(Utilisateur):
             'prenomPersonnePrevenir': self.prenomPersonnePrevenir,
             'contactPersonnePrevenir': self.contactPersonnePrevenir,
             'user' : User.formatOfId(self.user_id),
-            'commercial_client' : commercials_clients_formatted
+            'commercial_client' : commercials_clients_formatted if commercials_clients_formatted else None
         }
 
+    def formatSimple(self):
+        commercial = Commercial.query.get(self.id)
+        return {
+            'id': self.id,
+            'prenom': self.prenom,
+            'nom': self.nom,
+            'numTel': self.numTel,
+            'numIdentification': self.numIdentification,
+            'quartier': self.quartier,
+            'nomPersonnePrevenir': self.nomPersonnePrevenir,
+            'prenomPersonnePrevenir': self.prenomPersonnePrevenir,
+            'contactPersonnePrevenir': self.contactPersonnePrevenir,
+            'user' : User.formatOfId(self.user_id)
+        }
     @staticmethod
     def formatOfId(id):
         commercial = Commercial.query.get(id)
         return commercial.format()
+
+    @staticmethod
+    def formatOfIdSimple(id):
+        commercial = Commercial.query.get(id)
+        return commercial.formatSimple()
+
 
     def insert(self):
         try:

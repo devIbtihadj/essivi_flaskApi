@@ -1,13 +1,16 @@
 from datetime import datetime
 
+
 from typing import TYPE_CHECKING
+
+
 
 #from src.application.essivi.models.commande import Commande
 
 if TYPE_CHECKING:
     from src.application.essivi.models.commercial import Commercial
     from src.application.essivi.models.payement import Payement
-
+    from src.application.essivi.models.commande import Commande
 from src.application.extensions import db
 
 
@@ -30,7 +33,7 @@ class Livraison(db.Model):
         return {
             'id': self.id,
             'date_heure' : self.date_heure,
-            'commande' : Commande.formatOfId(self.commande_id),
+            'commande' : Commande.formatOfIdSimple(self.commande_id),
             'commercial': Commercial.formatOfId(self.commercial_id),
             'payements': payements_formatted
         }
