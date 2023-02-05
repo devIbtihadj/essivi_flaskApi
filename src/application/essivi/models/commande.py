@@ -1,11 +1,13 @@
 from __future__ import annotations
+
+
 from datetime import datetime
 
 from src.application.essivi.models.detail_Cde import Detail_cde
+from src.application.essivi.models.livraison import Livraison
 
 from src.application.extensions import db
 from src.application.essivi.models.client import Client
-
 
 
 class Commande(db.Model):

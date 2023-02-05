@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from datetime import datetime
 
-import src.application.essivi.models.commande
+import src
 from src.application.essivi.models.commercial import Commercial
 from src.application.extensions import db
 
@@ -24,7 +24,7 @@ class Livraison(db.Model):
         return {
             'id': self.id,
             'date_heure': self.date_heure,
-            'commande': Commande.formatOfIdSimple(self.commande_id),
+            'commande': src.application.essivi.models.commande.Commande.formatOfIdSimple(self.commande_id),
             'commercial': Commercial.formatOfId(self.commercial_id),
         }
 

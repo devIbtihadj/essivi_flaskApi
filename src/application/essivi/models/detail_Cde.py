@@ -1,8 +1,8 @@
 from __future__ import annotations
 
-
+from src.application.essivi.models.commande import Commande
+from src.application.essivi.models.type_Vente import Type_vente
 from src.application.extensions import db
-from typing import TYPE_CHECKING
 
 
 class Detail_cde(db.Model):
@@ -18,7 +18,6 @@ class Detail_cde(db.Model):
         self.type_vente = type_vente
 
     def format(self):
-
         return {
             'id': self.id,
             'qte': self.qte,

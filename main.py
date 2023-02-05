@@ -14,12 +14,13 @@ from src.application.essivi.models.vehicule import Vehicule
 from src.application.essivi.models.client import Client
 from src.application.essivi.models.ocuupation import Occupation
 from src.application.essivi.models.emballage import Emballage
-from src.application.essivi.models.detail_Cde import Detail_cde
-from src.application.essivi.models.commande import Commande
+#from src.application.essivi.models.detail_Cde import Detail_cde
+#from src.application.essivi.models.commande import Commande
 from src.application.essivi.models.admin import Admin
 from src.application.essivi.models.type_Vente import Type_vente
 from src.application.essivi.models.client import Client
 from src.application.essivi.models.livraison import Livraison
+
 
 from src.application.authentification.routes import auth
 from src.application.essivi.routes import marque
