@@ -1,3 +1,4 @@
+from __future__ import annotations
 from src.application.extensions import db
 
 

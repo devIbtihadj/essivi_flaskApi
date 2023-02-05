@@ -1,6 +1,8 @@
+from __future__ import annotations
+
+
 from src.application.extensions import db
-#from src.application.essivi.models.commande import Commande
-from src.application.essivi.models.type_Vente import Type_vente
+from typing import TYPE_CHECKING
 
 
 class Detail_cde(db.Model):
@@ -16,6 +18,7 @@ class Detail_cde(db.Model):
         self.type_vente = type_vente
 
     def format(self):
+
         return {
             'id': self.id,
             'qte': self.qte,
@@ -34,15 +37,15 @@ class Detail_cde(db.Model):
         db.session.delete(self)
         db.session.commit()
 
-    @staticmethod
-    def exists(id):
-        type_vente = Type_vente.query.get(id)
-        return type_vente if type_vente is not None else False
+    # @staticmethod
+    # def exists(id):
+    #     type_vente = Type_vente.query.get(id)
+    #     return type_vente if type_vente is not None else False
+    #
+    # @staticmethod
+    # def getWithId(id):
+    #     return Type_vente.query.get(id)
 
-    @staticmethod
-    def getWithId(id):
-        return Type_vente.query.get(id)
-
-    @staticmethod
-    def getAll():
-        return Type_vente.query.get.all()
+    # @staticmethod
+    # def getAll():
+    #     return Type_vente.query.get.all()

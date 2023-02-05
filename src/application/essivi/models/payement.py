@@ -1,9 +1,7 @@
+from __future__ import annotations
+
 from datetime import datetime
 
-from typing import TYPE_CHECKING
-if TYPE_CHECKING:
-    from src.application.essivi.models.commercial import Commercial
-    from src.application.essivi.models.livraison import Livraison
 from src.application.extensions import db
 
 

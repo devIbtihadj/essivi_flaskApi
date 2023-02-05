@@ -1,12 +1,11 @@
+from __future__ import annotations
 from datetime import datetime
-from typing import TYPE_CHECKING
-if TYPE_CHECKING:
 
+from src.application.essivi.models.detail_Cde import Detail_cde
 
-    from src.application.essivi.models.client import Client
-    from src.application.essivi.models.livraison import Livraison
-    #from src.application.essivi.models.livraison import Livraison
 from src.application.extensions import db
+from src.application.essivi.models.client import Client
+
 
 
 class Commande(db.Model):
@@ -16,21 +15,27 @@ class Commande(db.Model):
     date_voulu_reception = db.Column(db.DateTime(), nullable=False)
 
     client_id = db.Column(db.Integer, db.ForeignKey('clients.id'), nullable=False)
-    livraisons = db.relationship('Livraison', backref='commandes', lazy=True)
+    livraison_id = db.Column(db.Integer, db.ForeignKey('livraisons.id'), nullable=True)
+
+    details_commandes = db.relationship('Detail_cde', backref='commandes', lazy=True)
 
     def __int__(self, date_voulu_reception, client_id):
         self.date_voulu_reception = date_voulu_reception
         self.client_id = client_id
 
     def format(self):
-        livraisons = Livraison.query.filter_by(commande_id=self.id).order_by(Livraison.id).all()
-        livraisons_formatted = [livraison.format() for livraison in livraisons]
+        livraison = Livraison.query.filter_by(commande_id=self.id).first()
+        details_commandes = Detail_cde.query.filter_by(commande_id=self.id).all()
+
+        details_commandes_formates = [detail.format() for detail in details_commandes]
+
         return {
             'id': self.id,
-            'date_cde': self.date_cde,
-            'date_voulu_reception': self.date_voulu_reception,
+            'date_cde': self.date_cde.strftime("%Y-%m-%d %H:%M:%S:%f"),
+            'date_voulu_reception': self.date_voulu_reception.strftime("%Y-%m-%d %H:%M:%S:%f"),
             'client': Client.formatOfId(self.client_id),
-            'livraisons' : livraisons_formatted if livraisons_formatted else None
+            'livraison': livraison.formatSansCommande(self.livraison_id) if livraison else None,
+            'details': details_commandes_formates if details_commandes_formates else None
         }
 
     def formatOfIdSimpleRetrn(self):
@@ -53,7 +58,8 @@ class Commande(db.Model):
 
     def insert(self):
         db.session.add(self)
-        db.session.commit()
+        db.session.flush()
+        return self.id
 
     def update(self):
         db.session.commit()

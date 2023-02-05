@@ -1,16 +1,9 @@
+from __future__ import annotations
+
 from datetime import datetime
 
-
-from typing import TYPE_CHECKING
-
-
-
-#from src.application.essivi.models.commande import Commande
-
-if TYPE_CHECKING:
-    from src.application.essivi.models.commercial import Commercial
-    from src.application.essivi.models.payement import Payement
-    from src.application.essivi.models.commande import Commande
+import src.application.essivi.models.commande
+from src.application.essivi.models.commercial import Commercial
 from src.application.extensions import db
 
 
@@ -19,7 +12,6 @@ class Livraison(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     date_heure = db.Column(db.DateTime(), default=datetime.utcnow)
 
-    payements = db.relationship('Payement', backref='livraisons', lazy=True)
     commercial_id = db.Column(db.Integer, db.ForeignKey('commercials.id'), nullable=False)
     commande_id = db.Column(db.Integer, db.ForeignKey('commandes.id'), nullable=False)
 
@@ -28,14 +20,19 @@ class Livraison(db.Model):
         self.commercial_id = commercial_deliver_id
 
     def format(self):
-        payements = Payement.query.filter_by(livraison_id=self.id).order_by(Payement.id.desc()).all()
-        payements_formatted = [payement.format() for payement in payements]
+
         return {
             'id': self.id,
-            'date_heure' : self.date_heure,
-            'commande' : Commande.formatOfIdSimple(self.commande_id),
+            'date_heure': self.date_heure,
+            'commande': Commande.formatOfIdSimple(self.commande_id),
             'commercial': Commercial.formatOfId(self.commercial_id),
-            'payements': payements_formatted
+        }
+
+    def formatSansCommande(self):
+        return {
+            'id': self.id,
+            'date_heure': self.date_heure,
+            'commercial': Commercial.formatOfId(self.commercial_id),
         }
 
 

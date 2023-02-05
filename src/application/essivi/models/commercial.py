@@ -1,9 +1,11 @@
-from sqlalchemy import and_
+from __future__ import annotations
 
 from src.application.authentification.models.user import User
-#from src.application.essivi.models.client import Client
-from src.application.essivi.models.utilisateur import Utilisateur
+from src.application.essivi.models.client import Client
 from src.application.extensions import db
+from sqlalchemy import and_
+from src.application.essivi.models.utilisateur import Utilisateur
+from typing import TYPE_CHECKING
 
 
 class Commercial(Utilisateur):
@@ -20,7 +22,6 @@ class Commercial(Utilisateur):
 
     clients_registered = db.relationship('Client', backref='commercials', lazy=True)
     livraisons = db.relationship('Livraison', backref='commercials', lazy=True)
-    payements_received = db.relationship('Payement', backref='commercials', lazy=True)
 
     def __int__(self, nom, prenom, numTel, user_id,numIdentification, quartier, nomPersonnePrevenir, prenomPersonnePrevenir,
                 contactPersonnePrevenir):
@@ -32,9 +33,12 @@ class Commercial(Utilisateur):
         self.contactPersonnePrevenir = contactPersonnePrevenir
 
     def format(self):
-        commercials_clients = Commercial_client.query.filter \
-            (and_(Commercial_client.dateFin is None, Commercial.id == self.id)).all()
-        commercials_clients_formatted = [commercial_client.format() for commercial_client in commercials_clients]
+        # commercials_clients = Commercial_client.query.filter \
+        #     (and_(Commercial_client.dateFin is None, Commercial.id == self.id)).all()
+        # commercials_clients_formatted = [commercial_client.format() for commercial_client in commercials_clients]
+
+        clients = Client.query.filter_by(commerial_id=self.id).all()
+        clients_formatted = [client.format() for client in clients]
         return {
             'id': self.id,
             'prenom': self.prenom,
@@ -46,7 +50,7 @@ class Commercial(Utilisateur):
             'prenomPersonnePrevenir': self.prenomPersonnePrevenir,
             'contactPersonnePrevenir': self.contactPersonnePrevenir,
             'user' : User.formatOfId(self.user_id),
-            'commercial_client' : commercials_clients_formatted if commercials_clients_formatted else None
+            'clients': clients_formatted if clients_formatted else None
         }
 
     def formatSimple(self):
@@ -77,7 +81,6 @@ class Commercial(Utilisateur):
     def insert(self):
         try:
             db.session.add(self)
-            db.session.commit()
         except:
             print("exception 500 from my server")
 

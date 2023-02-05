@@ -14,9 +14,9 @@ from src.application.essivi.models.admin import Admin
 from src.application import db, bcrypt
 import jwt
 
-from src.application.essivi.models.commercial import Commercial
-from src.application.essivi.models.utilisateur import Utilisateur
 
+from src.application.essivi.models.utilisateur import Utilisateur
+from src.application.essivi.models.commercial import Commercial
 load_dotenv()
 
 @auth.route('test', methods=['GET'])
@@ -73,32 +73,37 @@ def user_register():
 
 @auth.route('/login', methods=['POST'])
 def login():
-    data = request.get_json()
-    if not data['email'] or not data['password']:
-        return Response.error_response(400, "Bad request", "Veuillez renseigner tous les champs"), 400
-    user = User.query.filter_by(email=data['email']).first()
-    print(user)
-    if not user:
-        return Response.error_response(401, "Bad request", "Aucun utilisateur n'existe avec cette adresse email"), 401
-    if bcrypt.check_password_hash(user.password, data['password']):
-        utilisateur = Utilisateur.query.filter_by(user_id=user.id).first()
-        print(utilisateur)
-        token = jwt.encode(
-            {
-                'user_id': user.id,
-                'utilisateur_id': utilisateur.id,
-                'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=30)
-            },
-            os.getenv('MY_APP_SECRET_KEY')
-        )
-        data = {
-            'token': token,
-            'utilisateur': utilisateur.format()
-        }
-        return Response.success_response(200, "OK", "Connexion effectuée avec succès", data), 200
-    else:
+    try:
+        data = request.get_json()
+        print(data)
+        if not data['email'] or not data['password']:
+            return Response.error_response(400, "Bad request", "Veuillez renseigner tous les champs"), 400
+        user = User.query.filter_by(email=data['email']).first()
+        print(user)
+        if not user:
+            return Response.error_response(400, "Bad request",
+                                           "Aucun utilisateur n'existe avec cette adresse email"), 400
+        if bcrypt.check_password_hash(user.password, data['password']):
+            utilisateur = Utilisateur.query.filter_by(user_id=user.id).first()
+            print(utilisateur)
+            token = jwt.encode(
+                {
+                    'user_id': user.id,
+                    'utilisateur_id': utilisateur.id,
+                    'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=30)
+                },
+                os.getenv('MY_APP_SECRET_KEY')
+            )
+            data = {
+                'token': token,
+                'utilisateur': utilisateur.formatOfIdSimple(utilisateur.id)
+            }
+            return Response.success_response(200, "OK", "Connexion effectuée avec succès", data), 200
+        else:
+            return Response.error_response(400, "Bad request", "Mot de passe incorrect"), 400
+    except Exception as e :
+        print(e)
         return Response.error_response(400, "Bad request", "Mot de passe incorrect"), 400
-
 
 def token_required(f):
     @wraps(f)

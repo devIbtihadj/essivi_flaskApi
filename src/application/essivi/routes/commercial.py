@@ -5,7 +5,7 @@ from src.application.authentification.routes.auth import token_required
 from src.application.essivi import commercial_bp as commercial
 from src.application.essivi.models.client import Client
 from src.application.essivi.models.commercial import Commercial
-from src.application.essivi.models.commande import Commande
+#from src.application.essivi.models.commande import Commande
 from sqlalchemy import and_
 
 from src.application.essivi.models.commercial_client import Commercial_client
@@ -71,4 +71,5 @@ def allLivraisonsDoneByCommercial(current_user, current_utilisateur, idCom):
         return Response.success_response(200, "OK", "Liste des livraisons récupérée avec succès", livraisons_formatted)
     except:
         return Response.error_response(500, "Internal server error", "Erreur de serveur"), 500
+
 

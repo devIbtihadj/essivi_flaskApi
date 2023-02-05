@@ -5,7 +5,7 @@ from src.application.Utils.responses import Response
 from src.application.authentification.routes.auth import token_required
 from src.application.essivi import livraison_bp as livraison
 from src.application.essivi.models.livraison import Livraison
-from src.application.essivi.models.commande import Commande
+#from src.application.essivi.models.commande import Commande
 from sqlalchemy import and_
 
 from src.application.essivi.models.payement import Payement

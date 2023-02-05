@@ -1,9 +1,10 @@
+from __future__ import annotations
 from datetime import datetime
 
 from src.application.essivi.models.commercial import Commercial
-#from src.application.essivi.models.commercial import Commercial
 from src.application.essivi.models.vehicule import Vehicule
 from src.application.extensions import db
+from typing import TYPE_CHECKING
 
 
 class Occupation(db.Model):

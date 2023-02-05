@@ -1,3 +1,5 @@
+import json
+
 from flask import request
 
 from src.application.Utils.responses import Response
@@ -14,13 +16,22 @@ from src.application.essivi.models.type_Vente import Type_vente
 def creer(current_user, current_utilisateur, idM):
     try:
         data = request.get_json()
-        type_vente = Type_vente(libelle_type_vente=data['libelle_type_vente'], qte_unit=data['qte_unit'],
+        print(data)
+
+
+        if not (data.get("image") is None):
+            type_vente = Type_vente(libelle_type_vente=data['libelle_type_vente'],
                                 prix_unit=data['prix_unit'],
                                 qte_composition=data['qte_composition'], marque_id=idM, image=data['image'])
+        else:
+                type_vente = Type_vente(libelle_type_vente=data['libelle_type_vente'],
+                                        prix_unit=data['prix_unit'],
+                                        qte_composition=data['qte_composition'], marque_id=idM, image=None)
         type_vente.insert()
-        Response.success_response(200, "OK", "Type de vente enrégistré avec succès", type_vente.format()), 400
-    except:
-        Response.error_response(400, "Bad request", "Veuillez remplir tous les champs"), 400
+        return Response.success_response(200, "OK", "Type de vente enrégistré avec succès", type_vente.format()), 200
+    except Exception as e:
+        print(e)
+        return Response.error_response(400, "Bad request", "Veuillez remplir tous les champs"), 400
 
 
 @type_vente.route('/get/all/<int:idM>', methods=['GET'])

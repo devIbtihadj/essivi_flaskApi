@@ -1,21 +1,26 @@
-from src.application.essivi.models.emballage import Emballage
+from __future__ import annotations
+
 from src.application.essivi.models.marque import Marque
 from src.application.extensions import db
+
 
 
 class Type_vente(db.Model):
     __tablename__ = 'types_ventes'
     id = db.Column(db.Integer, primary_key=True)
     libelle_type_vente = db.Column(db.String(20), nullable=False)
-    qte_unit = db.Column(db.Integer, nullable=False)
     prix_unit = db.Column(db.Integer, nullable=False)
-    image = db.Column(db.String(100), nullable=False)
+    image = db.Column(db.String(100), nullable=True)
     qte_composition = db.Column(db.Integer, default=1)
     marque_id = db.Column(db.Integer, db.ForeignKey('marques.id'), nullable=False)
 
-    def __init__(self, libelle_type_vente, qte_unit, prix_unit, image, qte_composition, marque_id):
+    details_commandes = db.relationship('Detail_cde', backref='types_ventes', lazy=True)
+
+
+
+
+    def __init__(self, libelle_type_vente, prix_unit, image, qte_composition, marque_id):
         self.libelle_type_vente = libelle_type_vente
-        self.qte_unit = qte_unit
         self.prix_unit = prix_unit
         self.image = image
         self.qte_composition = qte_composition
@@ -25,11 +30,10 @@ class Type_vente(db.Model):
         return {
             'id': self.id,
             'libelle_type_vente': self.libelle_type_vente,
-            'qte_unit': self.qte_unit,
             'prix_unit': self.prix_unit,
             'image': self.image,
             'qte_composition': self.qte_composition,
-            'marque': Marque.query.get(self.marque_id),
+            'marque': Marque.formatOfId(self.marque_id)
 
         }
 

@@ -1,10 +1,9 @@
+from __future__ import annotations
+
 from datetime import datetime
 
-#from src.application.essivi.models.commercial_client import Commercial_client
-# from src.application.essivi.models.commercial import Commercial
-# from src.application.essivi.models.commercial_client import Commercial_client
+
 from src.application.extensions import db
-from sqlalchemy import and_
 
 
 class Client(db.Model):
@@ -32,10 +31,8 @@ class Client(db.Model):
 
     def format(self):
         try:
-            #commercial_client = Commercial_client.query.filter(and_(Commercial_client.dateFin is None, Commercial_client.client_id == self.id)).first()
-
-            # print(commercial_client)
-
+            from src.application.essivi.models.commercial import Commercial
+            # TODO CARE ABOUT THIS
             return {
                 'id': self.id,
                 'nom': self.nom,
@@ -44,9 +41,9 @@ class Client(db.Model):
                 'longitude': self.longitude,
                 'latitude': self.latitude,
                 'quartier': self.quartier,
-                'dateEnrollement': self.dateEnrollement.strftime("%Y-%m-%d %H:%M:%S:%f")
+                'dateEnrollement': self.dateEnrollement.strftime("%Y-%m-%d %H:%M:%S:%f"),
+                'commercial': Commercial.formatOfIdSimple(self.commercial_id)
             }
-        # 'commercial_client': Commercial_client.formatOfId(commercial_client.id)
 
         except Exception as e:
             print(e)

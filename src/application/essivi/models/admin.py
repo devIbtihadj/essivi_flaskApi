@@ -1,6 +1,6 @@
-from src.application.essivi.models.utilisateur import Utilisateur
+from __future__ import annotations
 from src.application.extensions import db
-
+from src.application.essivi.models.utilisateur import Utilisateur
 
 class Admin(Utilisateur):
     __tablename__ = 'admins'
@@ -22,7 +22,8 @@ class Admin(Utilisateur):
 
         }
 
-    def formatOfId(id):
+    @staticmethod
+    def formatOfIdSimple(id):
         admin = Admin.query.get(id)
         return admin.format()
 

@@ -29,8 +29,6 @@ def creer(current_user, current_utilisateur, id):
         client_id_inserted = client.insert()
         print(client_id_inserted)
         client.id = client_id_inserted
-        comm_client = Commercial_client(commercial_id=id, client_id=client_id_inserted)
-        comm_client.insert()
         db.session.commit()
         return Response.success_response(200, "OK", "Affectation effectuée avec succès", client.format()), 200
     except Exception as e:
