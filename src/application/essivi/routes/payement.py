@@ -3,12 +3,12 @@ from flask import request
 from src.application import db
 from src.application.Utils.responses import Response
 from src.application.authentification.routes.auth import token_required
-from src.application.essivi import payement_bp as payement
+from src.application.essivi import payement_bp as payementCtrl
 
 from src.application.essivi.models.payement import Payement
 
 
-@payement.route('/creer/idCml/<int:idCml>/idLivr/<int:idLivr>', methods=['POST'])
+@payementCtrl.route('/creer/idCml/<int:idCml>/idLivr/<int:idLivr>', methods=['POST'])
 @token_required
 def effectuer(current_user, current_utilisateur, idCml, idLivr):
     data = request.get_json()

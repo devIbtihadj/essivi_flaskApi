@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-from src.application.essivi.models.marque import Marque
 from src.application.extensions import db
 
 
@@ -26,21 +25,7 @@ class Type_vente(db.Model):
         self.qte_composition = qte_composition
         self.marque_id = marque_id
 
-    def format(self):
-        return {
-            'id': self.id,
-            'libelle_type_vente': self.libelle_type_vente,
-            'prix_unit': self.prix_unit,
-            'image': self.image,
-            'qte_composition': self.qte_composition,
-            'marque': Marque.formatOfId(self.marque_id)
 
-        }
-
-    @staticmethod
-    def formatOfId(id):
-        type_vente = Type_vente.query.get(id)
-        return type_vente.format()
 
     def insert(self):
         db.session.add(self)
@@ -53,15 +38,3 @@ class Type_vente(db.Model):
         db.session.delete(self)
         db.session.commit()
 
-    @staticmethod
-    def exists(id):
-        type_vente = Type_vente.query.get(id)
-        return type_vente if type_vente is not None else False
-
-    @staticmethod
-    def getWithId(id):
-        return Type_vente.query.get(id)
-
-    @staticmethod
-    def getAll():
-        return Type_vente.query.get.all()

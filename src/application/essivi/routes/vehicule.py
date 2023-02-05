@@ -5,7 +5,7 @@ from src.application.essivi import vehicule_bp as vehicule
 from src.application import db
 from src.application.authentification.routes.auth import token_required
 from src.application.essivi.models.vehicule import Vehicule
-
+from src.application.essivi.services.vehicule import formatVehicule
 
 
 @vehicule.route('/creer', methods=['POST'])
@@ -16,7 +16,7 @@ def create(current_user, current_utilisateur):
     try:
         vehicule = Vehicule(immatriculation=data['immatriculation'], type_vehicule_id=data['type_vehicule_id'])
         vehicule.insert()
-        return Response.success_response(200, "OK", "vehicule enregistré avec succès", vehicule.format())
+        return Response.success_response(200, "OK", "vehicule enregistré avec succès", formatVehicule(vehicule.id))
     except Exception as e:
         print(e)
         return Response.error_response(400, "Bad request", "Veuillez remplir les champs requis"), 400
@@ -31,7 +31,7 @@ def update(current_user, current_utilisateur, id):
         vehicule.immatriculation = data['immatriculation']
         vehicule.type_vehicule_id = data['type_vehicule_id']
         vehicule.update()
-        return Response.success_response(200, "OK", "vehicule enregistré avec succès", vehicule.format())
+        return Response.success_response(200, "OK", "vehicule enregistré avec succès", formatVehicule(vehicule.id))
     except:
         return Response.error_response(400, "Bad request", "Veuillez remplir les champ requis"), 400
 
@@ -41,7 +41,7 @@ def update(current_user, current_utilisateur, id):
 def all(current_user, current_utilisateur):
     try:
         vehicules = Vehicule.query.order_by(Vehicule.id).all()
-        vehicules_formatted = [vehicule.format() for vehicule in vehicules]
+        vehicules_formatted = [formatVehicule(vehicule.id) for vehicule in vehicules]
         return Response.success_response(200, "OK", "Liste des vehicules récupérée avec succès", vehicules_formatted)
     except:
         return Response.error_response(500, "Internal server error", "Problème du serveur"), 500

@@ -5,6 +5,7 @@ from datetime import datetime
 # Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
 from src.application import create_app, db
 
+
 from src.application.essivi.models.utilisateur import Utilisateur
 from src.application.essivi.models.commercial import Commercial
 from src.application.essivi.models.type_Vehicule import Type_Vehicule
@@ -14,8 +15,8 @@ from src.application.essivi.models.vehicule import Vehicule
 from src.application.essivi.models.client import Client
 from src.application.essivi.models.ocuupation import Occupation
 from src.application.essivi.models.emballage import Emballage
-#from src.application.essivi.models.detail_Cde import Detail_cde
-#from src.application.essivi.models.commande import Commande
+from src.application.essivi.models.detail_Cde import Detail_cde
+from src.application.essivi.models.commande import Commande
 from src.application.essivi.models.admin import Admin
 from src.application.essivi.models.type_Vente import Type_vente
 from src.application.essivi.models.client import Client

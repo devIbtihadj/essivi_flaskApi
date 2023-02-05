@@ -1,5 +1,4 @@
 from src.application.extensions import db
-from src.application.essivi.models.type_Vehicule import Type_Vehicule
 
 
 class Vehicule(db.Model):
@@ -13,16 +12,7 @@ class Vehicule(db.Model):
         self.immatriculation = immatriculation
         self.type_vehicule_id = type_vehicule_id
 
-    def format(self):
-        return {
-            'id': self.id,
-            'immatriculation': self.immatriculation,
-            'type_vehicule': Type_Vehicule.formatOfId(self.type_vehicule_id)
-        }
 
-    def formatOfId(id):
-        vehicule = Vehicule.query.get(id)
-        return vehicule.format()
 
     def insert(self):
         db.session.add(self)

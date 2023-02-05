@@ -1,9 +1,10 @@
 import os
 from flask_cors import CORS
 from src.application.authentification import auth_bp
+# from src.application.essivi.routes import *
 from src.application.essivi import *
 
-from src.application.essivi.routes import *
+#from src.application.essivi.routes import *
 
 from .extensions import db, migrate
 from src.application.essivi.models import *

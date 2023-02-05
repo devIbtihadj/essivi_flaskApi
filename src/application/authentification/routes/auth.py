@@ -17,6 +17,8 @@ import jwt
 
 from src.application.essivi.models.utilisateur import Utilisateur
 from src.application.essivi.models.commercial import Commercial
+from src.application.essivi.services.commercial import formatCommercial
+
 load_dotenv()
 
 @auth.route('test', methods=['GET'])
@@ -49,7 +51,7 @@ def user_register():
             db.session.commit()
             return Response.success_response(http_code=201, http_message="Created",
                                              message="Commercial enregistré avec succès",
-                                             data=commercial.formatSimple()), 201
+                                             data=formatCommercial(commercial.id)), 201
         else:
             if data['typeUser'] == 'Admin':
                 admin = Admin(nom=data['nom'], prenom=data['prenom'], numTel=data['numTel'], user_id=inserted_id)

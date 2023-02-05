@@ -1,10 +1,7 @@
 from __future__ import annotations
 from datetime import datetime
 
-from src.application.essivi.models.commercial import Commercial
-from src.application.essivi.models.vehicule import Vehicule
 from src.application.extensions import db
-from typing import TYPE_CHECKING
 
 
 class Occupation(db.Model):
@@ -20,20 +17,7 @@ class Occupation(db.Model):
         self.commercial_id = comercial_id
         self.vehicule_id = vehicule_id
 
-    def format(self):
-        return {
-            'id': self.id,
-            'dateDebut': self.dateDebut,
-            'dateFin': self.dateFin,
-            'commercial': Commercial.formatOfId(self.commercial_id),
-            'vehicule': Vehicule.formatOfId(self.vehicule_id)
 
-        }
-
-    @staticmethod
-    def formatOfId(id):
-        occupation = Occupation.query.get(id)
-        return occupation.format()
 
     def insert(self):
         db.session.add(self)
@@ -46,15 +30,3 @@ class Occupation(db.Model):
         db.session.delete(self)
         db.session.commit()
 
-    @staticmethod
-    def exists(id):
-        occupation = Occupation.query.get(id)
-        return occupation if occupation is not None else False
-
-    @staticmethod
-    def getWithId(id):
-        return Occupation.query.get(id)
-
-    @staticmethod
-    def getAll():
-        return Occupation.query.get.all()

@@ -12,17 +12,7 @@ class Type_Vehicule(db.Model):
         self.libelle_type = libelle_type
         self.image=image
 
-    def format(self):
-        return {
-            'id': self.id,
-            'libelle_type': self.libelle_type,
-            'image' : self.image
-        }
 
-    @staticmethod
-    def formatOfId(id):
-        type_vehicule = Type_Vehicule.query.get(id)
-        return type_vehicule.format()
 
     def insert(self):
         db.session.add(self)
@@ -35,15 +25,3 @@ class Type_Vehicule(db.Model):
         db.session.delete(self)
         db.session.commit()
 
-    @staticmethod
-    def exists(id):
-        type_Vehicule = Type_Vehicule.query.get(id)
-        return type_Vehicule if type_Vehicule is not None else False
-
-    @staticmethod
-    def getWithId(id):
-        return Type_Vehicule.query.get(id)
-
-    @staticmethod
-    def getAll():
-        return Type_Vehicule.query.get.all()

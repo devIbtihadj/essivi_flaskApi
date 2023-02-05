@@ -29,28 +29,6 @@ class Client(db.Model):
         self.longitude = longitude
         self.commercial_id = commercial_id
 
-    def format(self):
-        try:
-            from src.application.essivi.models.commercial import Commercial
-            # TODO CARE ABOUT THIS
-            return {
-                'id': self.id,
-                'nom': self.nom,
-                'prenom': self.prenom,
-                'numTel': self.numTel,
-                'longitude': self.longitude,
-                'latitude': self.latitude,
-                'quartier': self.quartier,
-                'dateEnrollement': self.dateEnrollement.strftime("%Y-%m-%d %H:%M:%S:%f"),
-                'commercial': Commercial.formatOfIdSimple(self.commercial_id)
-            }
-
-        except Exception as e:
-            print(e)
-
-
-
-
     def insert(self):
         try:
             db.session.add(self)
@@ -68,20 +46,3 @@ class Client(db.Model):
         db.session.delete(self)
         db.session.commit()
 
-    @staticmethod
-    def formatOfId(id):
-        client = Client.query.get(id)
-        return client.format()
-
-    @staticmethod
-    def exists(id):
-        client = Client.query.get(id)
-        return client if client is not None else False
-
-    @staticmethod
-    def getWithId(id):
-        return Client.query.get(id)
-
-    @staticmethod
-    def getAll():
-        return Client.query.get.all()

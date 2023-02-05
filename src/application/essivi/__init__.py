@@ -1,6 +1,7 @@
 from flask import Blueprint
 
-type_vehicule_bp = Blueprint("type_vehicule_bp", __name__, url_prefix='/type_vehicule')
+
+type_vehicule_bp = Blueprint("type_vehicule_bp", __name__, url_prefix='/type_vehicule.py')
 
 vehicule_bp = Blueprint("vehicule_bp", __name__, url_prefix='/vehicule')
 
@@ -11,8 +12,6 @@ client_bp = Blueprint("client_bp", __name__, url_prefix='/client')
 marque_bp = Blueprint("marque_bp", __name__, url_prefix='/marque')
 
 # emballage_bp = Blueprint("emballage_bp", __name__, url_prefix='/emballage')
-
-
 
 livraison_bp = Blueprint("livraison_bp", __name__, url_prefix='/livraison')
 

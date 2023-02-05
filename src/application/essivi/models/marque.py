@@ -11,16 +11,7 @@ class Marque(db.Model):
     def __int__(self, libelle_marque):
         self.libelle_marque = libelle_marque
 
-    def format(self):
-        return {
-            'id': self.id,
-            'libelle_marque': self.libelle_marque
-        }
 
-    @staticmethod
-    def formatOfId(id):
-        marque = Marque.query.get(id)
-        return marque.format()
 
     def insert(self):
         db.session.add(self)
@@ -33,15 +24,3 @@ class Marque(db.Model):
         db.session.delete(self)
         db.session.commit()
 
-    @staticmethod
-    def exists(id):
-        marque = Marque.query.get(id)
-        return marque if marque is not None else False
-
-    @staticmethod
-    def getWithId(id):
-        return Marque.query.get(id)
-
-    @staticmethod
-    def getAll():
-        return Marque.query.get.all()

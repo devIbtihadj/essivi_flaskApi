@@ -4,11 +4,12 @@ from flask import request
 
 from src.application.Utils.responses import Response
 from src.application.essivi import type_vehicule_bp as type_v
-from src.application import db
 from src.application.authentification.routes.auth import token_required
 from src.application.essivi.models.type_Vehicule import Type_Vehicule
 from werkzeug.utils import secure_filename
 from dotenv import load_dotenv
+
+from src.application.essivi.services.type_vehicule import formatType_Vehicule
 
 load_dotenv()
 
@@ -36,7 +37,7 @@ def create(current_user, current_utilisateur):
             file.save(os.path.join(os.getenv('UPLOAD_FOLDER'), filename))
             type = Type_Vehicule(libelle_type=request.form['libelle_type'], image=(os.path.join(os.getenv('UPLOAD_FOLDER'), filename)))
             type.insert()
-            return Response.success_response(200, "OK", "Type de vehicule enregistré avec succès", type.format())
+            return Response.success_response(200, "OK", "Type de vehicule enregistré avec succès", formatType_Vehicule(type.id))
         else:
             return Response.error_response(400, "Bad request", "EAssurez-vous du type de fichier"), 400
     except Exception as e:
@@ -62,7 +63,7 @@ def update(current_user, current_utilisateur, id):
             file.save(os.path.join(os.getenv('UPLOAD_FOLDER'), filename))
             type.image = os.path.join(os.getenv('UPLOAD_FOLDER'), filename)
             type.update()
-            return Response.success_response(200, "OK", "Type de vehicule mis à jour avec succès", type.format())
+            return Response.success_response(200, "OK", "Type de vehicule mis à jour avec succès", formatType_Vehicule(type.id))
         else:
             return Response.error_response(400, "Bad request", "Assurez-vous du type de fichier"), 400
     except Exception as e:
@@ -74,7 +75,7 @@ def update(current_user, current_utilisateur, id):
 def get_all(current_user, current_utilisateur):
     try:
         types = Type_Vehicule.query.order_by(Type_Vehicule.id).all()
-        types_formatted = [type.format() for type in types]
+        types_formatted = [formatType_Vehicule(type.id) for type in types]
         return Response.success_response(200, "OK", "Liste des types de vehicules récupérée avec succès",
                                          types_formatted)
     except:
