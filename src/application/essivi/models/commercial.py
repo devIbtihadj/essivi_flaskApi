@@ -5,7 +5,6 @@ from src.application.essivi.models.client import Client
 from src.application.extensions import db
 from sqlalchemy import and_
 from src.application.essivi.models.utilisateur import Utilisateur
-from typing import TYPE_CHECKING
 
 
 class Commercial(Utilisateur):
