@@ -1,3 +1,5 @@
+from sqlalchemy import and_
+
 from src.application.essivi.models.client import Client
 from src.application.essivi.services.commercial import simpleFormatCommercial
 
@@ -19,6 +21,26 @@ def formatClient(id):
 
     except Exception as e:
         print(e)
+
+
+def formatClientForCommercial(id, idCom):
+    client = Client.query.filter(and_(Client.id==id, Client.commercial_id==idCom))
+    try:
+        return {
+            'id': client.id,
+            'nom': client.nom,
+            'prenom': client.prenom,
+            'numTel': client.numTel,
+            'longitude': client.longitude,
+            'latitude': client.latitude,
+            'quartier': client.quartier,
+            'dateEnrollement': client.dateEnrollement.strftime("%Y-%m-%d %H:%M:%S:%f"),
+            'commercial': simpleFormatCommercial(client.commercial_id)
+        }
+
+    except Exception as e:
+        print(e)
+        return None
 
 def formatOfId(id):
     client = Client.query.get(id)

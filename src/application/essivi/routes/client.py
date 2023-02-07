@@ -11,7 +11,8 @@ from src.application.essivi import client_bp as clientCtrl
 from src.application.essivi.models.client import Client
 from src.application.essivi.models.commande import Commande
 from src.application.essivi.services.client import formatClient
-from src.application.essivi.services.commande import formatCommande
+from src.application.essivi.services.commande import formatCommande, simpleFormatCommandeWithDetails, \
+    simpleFormatCommande
 
 
 @clientCtrl.route('/creer/comm/<int:id>', methods=['POST'])
@@ -101,8 +102,10 @@ def all_commandes_for_this_client_but_not_delivred(current_user, current_utilisa
         return Response.error_response(400, "Bad request", "Précisez l'id du client"), 400
     else:
         try:
-            commandes = Commande.query.filter(and_(client_id=id, livraisons=None)).order_by(Commande.id).all()
-            commandes_formatted = [formatCommande(cmd.id) for cmd in commandes]
+            commandes = Commande.query.filter(and_(client_id=id, livraison_id=None)).order_by(Commande.id).all()
+            print("commandes")
+            print(commandes)
+            commandes_formatted = [simpleFormatCommande(cmd.id) for cmd in commandes]
             return Response.success_response(200, "OK",
                                              "Liste des commandes non livrées du client récupérées avec succès",
                                              commandes_formatted), 200
@@ -117,13 +120,24 @@ def all_commandes_not_delivred(current_user, current_utilisateur):
         return Response.error_response(400, "Bad request", "Précisez l'id du client"), 400
     else:
         try:
-            commandes = Commande.query.filter(livraisons=None).order_by(Commande.id).all()
-            commandes_formatted = [formatCommande(cmd.id) for cmd in commandes]
+            commandes = Commande.query.filter_by(livraison_id=None).order_by(Commande.id).all()
+            commandes_formatted = [simpleFormatCommandeWithDetails(cmd.id) for cmd in commandes]
             return Response.success_response(200, "OK",
-                                             "Liste des commandes non livrées du client récupérées avec succès",
+                                             "Liste des commandes non livrées des clients récupérées avec succès",
                                              commandes_formatted), 200
-        except:
+        except Exception as e:
+            print(e)
             return Response.error_response(500, "Internal server error", "Problème du serveur"), 500
+
+
+
+@clientCtrl.route('/commande/<int:id>', methods=['GET'])
+@token_required
+def getCommande(current_user, current_utilisateur, id):
+    return Response.success_response(200, "OK",
+                                     "Commande récupérée avec succès",
+                                     simpleFormatCommande(id)), 200
+
 
 
 @clientCtrl.route('/get/all', methods=['GET'])

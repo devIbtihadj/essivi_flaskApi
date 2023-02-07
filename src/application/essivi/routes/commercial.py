@@ -4,12 +4,15 @@ from src.application.Utils.responses import Response
 from src.application.authentification.routes.auth import token_required
 from src.application.essivi import commercial_bp as commercialCtrl
 from src.application.essivi.models.client import Client
+from src.application.essivi.models.commande import Commande
 from src.application.essivi.models.commercial import Commercial
 
 from src.application.essivi.models.commercial_client import Commercial_client
 from src.application.essivi.models.livraison import Livraison
 from src.application.essivi.models.payement import Payement
 from src.application.essivi.services.client import formatClient
+from src.application.essivi.services.commande import simpleFormatCommandeWithDetails, \
+    simpleFormatCommandeWithDetailsForCommercial
 from src.application.essivi.services.commercial import formatCommercial
 from src.application.essivi.services.livraison import formatLivraison
 
@@ -26,7 +29,6 @@ def allCommercials(current_user, current_utilisateur):
         return Response.error_response(500, "Internal server error", "Erreur de serveur"), 500
 
 
-
 # @commercial.route('/client/all/<int:idCom>', methods=['GET'])
 # @token_required
 # def allClientsForCommercial(current_user, current_utilisateur, id):
@@ -40,17 +42,17 @@ def allCommercials(current_user, current_utilisateur):
 #         return Response.error_response(500, "Internal server error", "Erreur de serveur"), 500
 #
 
-#TODO ALL CLIENTS FOR COMMERCIAL
+# TODO ALL CLIENTS FOR COMMERCIAL
 
 @commercialCtrl.route('/<int:idCom>/clients/all', methods=['GET'])
 @token_required
 def allCientsForCommercial(current_user, current_utilisateur, idCom):
-        try:
-            clients = Client.query.filter_by(commercial_id=idCom).order_by(Client.id.desc()).all()
-            clients_formatted = [formatClient(client.id) for client in clients]
-            return Response.success_response(200, "OK", "Liste des clients récupérée avec succès", clients_formatted)
-        except:
-            return Response.error_response(500, "Internal server error", "Erreur de serveur"), 500
+    try:
+        clients = Client.query.filter_by(commercial_id=idCom).order_by(Client.id.desc()).all()
+        clients_formatted = [formatClient(client.id) for client in clients]
+        return Response.success_response(200, "OK", "Liste des clients récupérée avec succès", clients_formatted)
+    except:
+        return Response.error_response(500, "Internal server error", "Erreur de serveur"), 500
 
 
 # @commercial.route('/<int:idCom>/payements/all', methods=['GET'])
@@ -75,3 +77,34 @@ def allLivraisonsDoneByCommercial(current_user, current_utilisateur, idCom):
         return Response.error_response(500, "Internal server error", "Erreur de serveur"), 500
 
 
+
+
+
+# TODO THIS ONE DOES NOT WORK VERRY WELL
+@commercialCtrl.route('/<int:idCom>/commandes/notdelivered', methods=['GET'])
+@token_required
+def all_commandes_not_delivredForCommercial(current_user, current_utilisateur, idCom):
+    if id is None:
+        return Response.error_response(400, "Bad request", "Précisez l'id du client"), 400
+    else:
+        try:
+            commandes = Commande.query.filter_by(livraison_id=None).order_by(Commande.id).all()
+            clients = Client.query.filter_by(commercial_id=idCom).all()
+
+            print(type(commandes))
+            mesCommande = [Commande(id=0)]
+            print(len(mesCommande))
+
+            print(mesCommande[0])
+            for commande in commandes:
+                for client in clients:
+                    if (commande.client_id == client.id):
+                        mesCommande = mesCommande.append(commande)
+            del mesCommande[Commande(id=0)]
+            commandes_formatted = [simpleFormatCommandeWithDetails(cmd.id) for cmd in mesCommande]
+            return Response.success_response(200, "OK",
+                                             "Liste des commandes non livrées des clients récupérées avec succès",
+                                             commandes_formatted), 200
+        except Exception as e:
+            print(e)
+            return Response.error_response(500, "Internal server error", "Problème du serveur"), 500

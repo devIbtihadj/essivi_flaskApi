@@ -114,6 +114,7 @@ def token_required(f):
 
         if 'x-access-token' in request.headers:
             token = request.headers['x-access-token']
+            print(token)
         if not token:
             return Response.error_response(401, "Unauthorized", "Veuillez d'abord vous connecter"), 401
         try:
@@ -146,3 +147,10 @@ def change_password(current_user, current_utilisateur):
 
 
 # TODO DISABLE ACCOUNT
+
+@auth.route('/me/<int:id>', methods=['POST'])
+@token_required
+def me(current_user, current_utilisateur, id):
+    utilisateur = Utilisateur.query.filter_by(id=id).first()
+    print(utilisateur)
+    return Response.success_response(200, "OK", "Informations de l'utilisateur", utilisateur.format()), 200
