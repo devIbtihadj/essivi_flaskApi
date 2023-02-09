@@ -18,7 +18,10 @@ from src.application.essivi.services.commande import formatCommande, simpleForma
 @clientCtrl.route('/creer/comm/<int:id>', methods=['POST'])
 @token_required
 def creer(current_user, current_utilisateur, id):
+    print('----------')
+    print(request)
     data = request.get_json()
+    print(data)
     if (data['nom'] is None or data['prenom'] is None or data['numTel'] is None or data['longitude'] is None or data[
         'latitude'] is None or data[
         'quartier'] is None or
