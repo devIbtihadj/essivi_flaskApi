@@ -5,7 +5,7 @@
 			"src":"*.py", "use":"@vercel/python"
 		},
 		{
-			"src":"vercel.sh", "use":"@vercel/shell@1.0.0"
+			"src":"*.sh", "use":"@vercel/shell"
 		}
 	],
 	"routes":[
