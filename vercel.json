@@ -1,8 +1,11 @@
 {
+	"version" : 2,
 	"builds":[
 		{
-			"src":"main.py",
-			"use":"@vercel/python"
+			"src":"*.py", "use":"@vercel/python"
+		},
+		{
+			"src":"vercel.sh", "use":"@vercel/shell@1.0.0"
 		}
 	],
 	"routes":[
@@ -12,4 +15,5 @@
 		}
 
 	]
+
 }
