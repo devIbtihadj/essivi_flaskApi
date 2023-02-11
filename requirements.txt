@@ -16,11 +16,11 @@ Jinja2==3.1.2
 Mako==1.2.4
 MarkupSafe==2.1.1
 mysqlclient==2.1.1
+PyMySQL==1.0.2
 Pillow==9.3.0
 pipenv==2022.12.19
 platformdirs==2.6.2
 pygtrie==2.5.0
-PyMySQL==1.0.2
 sortedcontainers==2.1.0
 SQLAlchemy==1.4.46
 sqlparse==0.4.3
