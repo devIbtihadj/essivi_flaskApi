@@ -4,10 +4,6 @@
 		{
 			"src":"*.py", "use":"@vercel/python"
 		}
-	,
-		{
-			"src":"*.sh", "use":"@vercel/bash"
-		}
 	],
 	"routes":[
 		{
