@@ -14,7 +14,7 @@ from src.application.essivi.services.client import formatClient
 from src.application.essivi.services.commande import simpleFormatCommandeWithDetails, \
     simpleFormatCommandeWithDetailsForCommercial
 from src.application.essivi.services.commercial import formatCommercial
-from src.application.essivi.services.livraison import formatLivraison
+from src.application.essivi.services.livraison2 import formatLivraison
 
 
 @commercialCtrl.route('/all', methods=['GET'])

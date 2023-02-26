@@ -76,6 +76,7 @@ def user_register():
 @auth.route('/login', methods=['POST'])
 def login():
     try:
+        print(request.headers)
         data = request.get_json()
         print(data)
         if not data['email'] or not data['password']:

@@ -6,6 +6,7 @@ from sqlalchemy import and_
 from src.application.Utils.responses import Response
 from src.application.authentification.routes.auth import token_required
 from src.application.essivi import commercial_client_bp as commercial_client
+from src.application.essivi.models.client import Client
 from src.application.essivi.models.commercial_client import Commercial_client
 
 
@@ -42,9 +43,10 @@ def get(current_user, current_utilisateur, id):
 @token_required
 def getAll(current_user, current_utilisateur):
     try:
-        commercials_clients = Commercial_client.query.order_by(Commercial_client.id).all()
-        print(commercials_clients)
-        commercial_client_formatted = [cc.format() for cc in commercials_clients]
+        # THIS IS NOT USE, ALSO CLIENT DON'T HAVE FORMAT METHODE, BUT CLIENT_SERVICE HAS IT
+        clients = Client.query.order_by(Client.id).all()
+        print(clients)
+        commercial_client_formatted = [c.format() for c in clients]
         return Response.success_response(200, "OK", "Liste récupérée avec succès", commercial_client_formatted), 200
     except Exception as e:
         print(e)

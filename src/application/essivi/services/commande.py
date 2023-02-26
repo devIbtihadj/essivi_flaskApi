@@ -65,6 +65,25 @@ def simpleFormatCommandeWithDetailsForCommercial(id, idComm):
     }
 
 
+
+
+
+# def formatLivraison(id):
+#     livraison = Livraison.query.get(id)
+#     return {
+#         'id': livraison.id,
+#         'date_heure': livraison.date_heure.strftime("%Y-%m-%d %H:%M:%S:%f"),
+#         'commande': simpleFormatCommande(livraison.commande_id),
+#         'commercial': simpleFormatCommercial(livraison.commercial_id),
+#     }
+
+
+
+
+
+
+
+
 def formatOfId(id):
     commande = Commande.query.get(id)
     return commande.format()

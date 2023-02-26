@@ -9,7 +9,8 @@ from src.application.essivi import commande_bp as commandeCtrl
 # if TYPE_CHECKING:
 from src.application.essivi.models.commande import Commande as CommandeModel
 from src.application.essivi.models.detail_Cde import Detail_cde
-from src.application.essivi.services.commande import formatCommande
+from src.application.essivi.services.commande import formatCommande, simpleFormatCommande
+from src.application.essivi.services.livraison2 import formatLivraison
 from src.application.extensions import db
 
 @commandeCtrl.route('/creer', methods=['POST'])
@@ -41,6 +42,51 @@ def creer(current_user, current_utilisateur):
     except Exception as e:
         print(e)
         return Response.error_response(400, "Bad request", "Veuillez remplir tous les champs"), 400
+
+
+
+
+
+
+@commandeCtrl.route('/delivered/all', methods=['GET'])
+@token_required
+def allLivraisons(current_user, current_utilisateur):
+    try:
+        commandes = CommandeModel.query.all()
+        commandes_concerned = [commande for commande in commandes if
+                                commande.livraison_id is not None]
+        livraisons_formatted = [formatLivraison(commande.livraison_id) for commande in commandes_concerned]
+        return Response.success_response(200, "OK", "Liste des livraisons récupérée avec succès", livraisons_formatted)
+    except Exception as e:
+        print(e)
+        return Response.error_response(400, "Bad request", "Problème"), 400
+
+
+
+@commandeCtrl.route('/notdelivered/all', methods=['GET'])
+@token_required
+def allLivraisonsNotDone(current_user, current_utilisateur):
+    try:
+        commandes = CommandeModel.query.all()
+        commandes_concerned = [commande for commande in commandes if
+                                commande.livraison_id is None]
+        commandes_formatted = [formatCommande(commande.id) for commande in commandes_concerned]
+        return Response.success_response(200, "OK", "Liste des commandes récupérée avec succès", commandes_formatted)
+    except Exception as e:
+        print(e)
+        return Response.error_response(400, "Bad request", "Problème"), 400
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 # @commande.route('/<int:idCom>/all', methods=['GET'])

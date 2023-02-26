@@ -22,4 +22,4 @@ def creer(current_user, current_utilisateur, idCml, idCde):
                                          simpleFormatLivraison(livraison.id)), 200
     except Exception as e:
         print(e)
-        return Response.error_response(400, "Bad request", "Problème",), 400
+        return Response.error_response(400, "Bad request", "Problème"), 400
