@@ -35,7 +35,7 @@ def create(current_user, current_utilisateur):
             filename = secure_filename(file.filename)
             print('filename '+filename)
             file.save(os.path.join(os.getenv('UPLOAD_FOLDER'), filename))
-            type = Type_Vehicule(libelle_type=request.form['libelle_type'], image=(os.path.join(os.getenv('UPLOAD_FOLDER'), filename)))
+            type = Type_Vehicule(libelle_type=request.form['libelle_type'], image=(os.path.join(os.getenv('TYPES_VEHICULES_FILES_FOLDER'), filename)))
             type.insert()
             return Response.success_response(200, "OK", "Type de vehicule enregistré avec succès", formatType_Vehicule(type.id))
         else:

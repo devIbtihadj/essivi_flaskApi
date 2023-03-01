@@ -9,7 +9,7 @@ class Type_vente(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     libelle_type_vente = db.Column(db.String(20), nullable=False)
     prix_unit = db.Column(db.Integer, nullable=False)
-    image = db.Column(db.String(100), nullable=True)
+    image = db.Column(db.String(150), nullable=True)
     qte_composition = db.Column(db.Integer, default=1)
     marque_id = db.Column(db.Integer, db.ForeignKey('marques.id'), nullable=False)
 

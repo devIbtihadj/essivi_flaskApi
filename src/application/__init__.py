@@ -20,6 +20,8 @@ bcrypt = Bcrypt()
 
 def create_app(config_type):
     app = Flask(__name__)
+    app.static_folder='essivi\\ressources\\'
+    print(app.static_folder)
     print(os.path.dirname(app.instance_path))
     CORS(app)
     config_file = os.path.join(os.getcwd() + '\\src\\config', config_type + '.py')
