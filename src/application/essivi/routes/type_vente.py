@@ -83,3 +83,13 @@ def get_all(current_user, current_utilisateur):
     except:
         return Response.error_response(500, "Internal server error", "Problème du serveur"), 500
 
+
+
+@type_venteCtrl.route('/get/<int:id>', methods=['GET'])
+@token_required
+def get_one(current_user, current_utilisateur, id):
+    try:
+        return Response.success_response(200, "OK", "Type de vente récupérée avec succès", formatType_Vente(id))
+    except:
+        return Response.error_response(500, "Internal server error", "Problème du serveur"), 500
+
