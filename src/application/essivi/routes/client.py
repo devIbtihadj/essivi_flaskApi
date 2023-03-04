@@ -163,3 +163,17 @@ def getClient(current_user, current_utilisateur, id):
         return Response.success_response(200, "OK", "Liste récupérée avec succès", clients_formatted), 200
     except:
         return Response.error_response(500, "Internal server error", "Erreur de serveur"), 500
+
+
+@clientCtrl.route('/change/idComm/<int:idComm>/idCli/<int:idCli>', methods=['PUT'])
+@token_required
+def changerCommrcial(current_user, current_utilisateur, idComm, idCli):
+    try:
+        client = Client.query.get(idCli)
+        client.commercial_id=idComm
+        print(client.commercial_id)
+        db.session.commit()
+        return Response.success_response(200, "OK", "Enrégistré avec succès", formatClient(client.id)), 200
+    except Exception as e:
+        print(e)
+        return Response.error_response(500, "Internal server error", "Erreur de serveur"), 500

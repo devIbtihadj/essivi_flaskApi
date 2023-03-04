@@ -25,7 +25,8 @@ def allCommercials(current_user, current_utilisateur):
         commercials_formatted = [formatCommercial(commercial.id) for commercial in commercials]
         return Response.success_response(http_code=200, http_message="OK", message="Liste récupérée avec succès",
                                          data=commercials_formatted), 200
-    except:
+    except Exception as e:
+        print(e)
         return Response.error_response(500, "Internal server error", "Erreur de serveur"), 500
 
 

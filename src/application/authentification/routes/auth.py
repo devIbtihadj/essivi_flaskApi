@@ -29,6 +29,7 @@ def test():
 def user_register():
     try:
         data = request.get_json()
+        print(data)
         user = User(email=data['email'], password=data['password'])
         inserted_id = user.insert()
         if data['typeUser'] == 'Commercial': 

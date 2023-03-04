@@ -1,12 +1,13 @@
 from src.application.authentification.models.user import User
 from src.application.essivi.models.client import Client
 from src.application.essivi.models.commercial import Commercial
+from src.application.essivi.services.client2 import formatClient2SansCoommercial
 
 
 def formatCommercial(id):
     commercial = getWithId(id)
     clients = Client.query.filter_by(commercial_id=commercial.id).all()
-    clients_formatted = [client.format() for client in clients]
+    clients_formatted = [formatClient2SansCoommercial(client.id) for client in clients]
     return {
         'id': commercial.id,
         'prenom': commercial.prenom,
