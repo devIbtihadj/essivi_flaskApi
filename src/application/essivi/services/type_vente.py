@@ -11,6 +11,7 @@ def formatType_Vente(id):
         'prix_unit': type_vente.prix_unit,
         'image': type_vente.image,
         'qte_composition': type_vente.qte_composition,
+        'qte_contenu_unitaire': type_vente.qte_contenu_unitaire,
         'marque': formatMarque(type_vente.marque_id)
 
     }
