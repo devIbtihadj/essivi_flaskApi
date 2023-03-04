@@ -31,7 +31,7 @@ def user_register():
         data = request.get_json()
         user = User(email=data['email'], password=data['password'])
         inserted_id = user.insert()
-        if data['typeUser'] == 'Commercial':
+        if data['typeUser'] == 'Commercial': 
             commercial = Commercial(nom=data['nom'], prenom=data['prenom'], numTel=data['numTel'],
                                     numIdentification=data['numIdentification'], quartier=data['quartier'],
                                     nomPersonnePrevenir=data['nomPersonnePrevenir'],

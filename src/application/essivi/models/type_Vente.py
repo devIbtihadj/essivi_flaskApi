@@ -10,6 +10,7 @@ class Type_vente(db.Model):
     libelle_type_vente = db.Column(db.String(20), nullable=False)
     prix_unit = db.Column(db.Integer, nullable=False)
     image = db.Column(db.String(150), nullable=True)
+    qte_contenu_unitaire = db.Column(db.Integer, nullable=False)
     qte_composition = db.Column(db.Integer, default=1)
     marque_id = db.Column(db.Integer, db.ForeignKey('marques.id'), nullable=False)
 
@@ -18,10 +19,11 @@ class Type_vente(db.Model):
 
 
 
-    def __init__(self, libelle_type_vente, prix_unit, image, qte_composition, marque_id):
+    def __init__(self, libelle_type_vente, prix_unit, image, qte_composition, marque_id, qte_contenu_unitaire):
         self.libelle_type_vente = libelle_type_vente
         self.prix_unit = prix_unit
         self.image = image
+        self.qte_contenu_unitaire = qte_contenu_unitaire
         self.qte_composition = qte_composition
         self.marque_id = marque_id
 

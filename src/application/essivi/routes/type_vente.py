@@ -45,12 +45,14 @@ def creer(current_user, current_utilisateur, idM):
             print("////////////")
             type_vente = Type_vente(libelle_type_vente=request.form['libelle_type_vente'],
                                     prix_unit=request.form['prix_unit'],
+                                    qte_contenu_unitaire=request.form['qte_contenu_unitaire'],
                                     qte_composition=request.form['qte_composition'], marque_id=idM,
                                     image=(os.path.join(os.getenv('PRODUCTS_FILES_FOLDER'), filename)))
 
         else:
             type_vente = Type_vente(libelle_type_vente=request.form['libelle_type_vente'],
                                     prix_unit=request.form['prix_unit'],
+                                    qte_contenu_unitaire=request.form['qte_contenu_unitaire'],
                                     qte_composition=request.form['qte_composition'], marque_id=idM, image=None)
         type_vente.insert()
         return Response.success_response(200, "OK", "Type de vente enrégistré avec succès",
