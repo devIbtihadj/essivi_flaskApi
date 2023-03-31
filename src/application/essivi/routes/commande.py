@@ -67,7 +67,8 @@ def allLivraisons(current_user, current_utilisateur):
 @token_required
 def allLivraisonsNotDone(current_user, current_utilisateur):
     try:
-        commandes = CommandeModel.query.all()
+        # TODO HERE MY INSERT ----- ORDER BY
+        commandes = CommandeModel.query.order_by(CommandeModel.id.desc()).all()
         commandes_concerned = [commande for commande in commandes if
                                 commande.livraison_id is None]
         commandes_formatted = [formatCommande(commande.id) for commande in commandes_concerned]

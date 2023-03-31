@@ -94,7 +94,7 @@ def login():
                 {
                     'user_id': user.id,
                     'utilisateur_id': utilisateur.id,
-                    'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=30)
+                    'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=60)
                 },
                 os.getenv('MY_APP_SECRET_KEY')
             )

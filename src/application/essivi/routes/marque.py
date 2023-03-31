@@ -38,7 +38,7 @@ def update(current_user, current_utilisateur, id):
 @token_required
 def get_all(current_user, current_utilisateur):
     try:
-        marques = Marque.query.order_by(Marque.id).all()
+        marques = Marque.query.order_by(Marque.id.desc()).all()
         marques_formatted = [formatMarque(marque.id) for marque in marques]
         return Response.success_response(200, "OK", "Liste des types de vehicules récupérée avec succès", marques_formatted)
     except:

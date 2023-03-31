@@ -21,7 +21,7 @@ from src.application.essivi.services.livraison2 import formatLivraison
 @token_required
 def allCommercials(current_user, current_utilisateur):
     try:
-        commercials = Commercial.query.order_by(Commercial.id).all()
+        commercials = Commercial.query.order_by(Commercial.id.desc()).all()
         commercials_formatted = [formatCommercial(commercial.id) for commercial in commercials]
         return Response.success_response(http_code=200, http_message="OK", message="Liste récupérée avec succès",
                                          data=commercials_formatted), 200
@@ -89,7 +89,7 @@ def all_commandes_not_delivredForCommercial(current_user, current_utilisateur, i
         return Response.error_response(400, "Bad request", "Précisez l'id du client"), 400
     else:
         try:
-            commandes = Commande.query.filter_by(livraison_id=None).order_by(Commande.id).all()
+            commandes = Commande.query.filter_by(livraison_id=None).order_by(Commande.id.desc()).all()
             clients = Client.query.filter_by(commercial_id=idCom).all()
 
             print(type(commandes))

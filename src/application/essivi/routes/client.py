@@ -72,7 +72,7 @@ def all_commandes_for_this_client(current_user, current_utilisateur, id):
         return Response.error_response(400, "Bad request", "Précisez l'id du client"), 400
     else:
         try:
-            commandes = Commande.query.filter_by(client_id=id).order_by(Commande.id).all()
+            commandes = Commande.query.filter_by(client_id=id).order_by(Commande.id.desc()).all()
             print(commandes)
             commandes_formatted = [formatCommande(cmd.id) for cmd in commandes]
             return Response.success_response(200, "OK", "Liste des commandes du client récupérées avec succès",
@@ -105,7 +105,7 @@ def all_commandes_for_this_client_but_not_delivred(current_user, current_utilisa
         return Response.error_response(400, "Bad request", "Précisez l'id du client"), 400
     else:
         try:
-            commandes = Commande.query.filter(and_(client_id=id, livraison_id=None)).order_by(Commande.id).all()
+            commandes = Commande.query.filter(and_(client_id=id, livraison_id=None)).order_by(Commande.id.desc()).all()
             print("commandes")
             print(commandes)
             commandes_formatted = [simpleFormatCommande(cmd.id) for cmd in commandes]
@@ -123,7 +123,7 @@ def all_commandes_not_delivred(current_user, current_utilisateur):
         return Response.error_response(400, "Bad request", "Précisez l'id du client"), 400
     else:
         try:
-            commandes = Commande.query.filter_by(livraison_id=None).order_by(Commande.id).all()
+            commandes = Commande.query.filter_by(livraison_id=None).order_by(Commande.id.desc()).all()
             commandes_formatted = [simpleFormatCommandeWithDetails(cmd.id) for cmd in commandes]
             return Response.success_response(200, "OK",
                                              "Liste des commandes non livrées des clients récupérées avec succès",
@@ -147,7 +147,7 @@ def getCommande(current_user, current_utilisateur, id):
 @token_required
 def all_clients(current_user, current_utilisateur):
     try:
-        clients = Client.query.all()
+        clients = Client.query.order_by(Client.id.desc()).all()
         clients_formatted = [formatClient(client.id) for client in clients]
         return Response.success_response(200, "OK", "Liste récupérée avec succès", clients_formatted), 200
     except:

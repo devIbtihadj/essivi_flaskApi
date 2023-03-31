@@ -23,3 +23,20 @@ def creer(current_user, current_utilisateur, idCml, idCde):
     except Exception as e:
         print(e)
         return Response.error_response(400, "Bad request", "Problème"), 400
+
+
+@livraisonCtrl.route('/get/delivered/<int:id>', methods=['GET'])
+@token_required
+def getCommercialAllDelivered(current_user, current_utilisateur, id):
+    try:
+        #data = request.get_json()
+        livraisons = Livraison.query.filter_by(commercial_id=id).all()
+        livraisons_formatted = [simpleFormatLivraison(livraison.id) for livraison in livraisons]
+
+        return Response.success_response(200, "OK", "Livraison enregistrée avec succès",
+                                         livraisons_formatted), 200
+    except Exception as e:
+        print(e)
+        return Response.error_response(400, "Bad request", "Problème"), 400
+
+

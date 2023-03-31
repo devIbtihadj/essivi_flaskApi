@@ -67,7 +67,7 @@ def creer(current_user, current_utilisateur, idM):
 @token_required
 def get_allForMarque(current_user, current_utilisateur, idM):
     try:
-        type_ventes = Type_vente.query.filter_by(marque_id=idM).order_by(Type_vente.id).all()
+        type_ventes = Type_vente.query.filter_by(marque_id=idM).order_by(Type_vente.id.desc()).all()
         type_vente_formatted = [formatType_Vente(type_vente.id) for type_vente in type_ventes]
         return Response.success_response(200, "OK", "Liste des types de vente récupérée avec succès", type_vente_formatted)
     except:
@@ -79,7 +79,7 @@ def get_allForMarque(current_user, current_utilisateur, idM):
 @token_required
 def get_all(current_user, current_utilisateur):
     try:
-        type_ventes = Type_vente.query.order_by(Type_vente.id).all()
+        type_ventes = Type_vente.query.order_by(Type_vente.id.desc()).all()
         type_vente_formatted = [formatType_Vente(type_vente.id) for type_vente in type_ventes]
         return Response.success_response(200, "OK", "Liste des types de vente récupérée avec succès", type_vente_formatted)
     except:
